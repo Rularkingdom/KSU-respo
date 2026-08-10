@@ -85,11 +85,13 @@ export default function Home() {
                   <div className="relative aspect-square max-w-md mx-auto">
                     <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/20 to-brand-red/10 rounded-4xl blur-2xl" />
                     <div className="relative card overflow-hidden shadow-lift rounded-4xl">
-                      <ProductImage
-                        product={featured[0] as any}
-                        variant="hero"
-                        className="w-full h-full"
-                      />
+                      {featured[0] && (
+                        <ProductImage
+                          product={featured[0]}
+                          variant="hero"
+                          className="w-full h-full"
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
