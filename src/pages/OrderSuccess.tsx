@@ -56,7 +56,7 @@ export default function OrderSuccess() {
               <span className="font-semibold text-brand-brown">{totalUnits} item{totalUnits !== 1 ? 's' : ''}</span>
             </div>
 
-            {/* Itemized Breakdown via Historical Snapshots */}
+            {/* Itemized Breakdown using Historical Snapshots */}
             <div className="py-2 space-y-2 border-b border-brand-brown/10">
               <p className="text-xs font-semibold text-brand-brown/50 uppercase tracking-wider mb-2">
                 Ordered Items (Historical Snapshots)
