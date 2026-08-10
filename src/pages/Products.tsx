@@ -1,53 +1,58 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Filter, X, Search } from 'lucide-react';
-import { SEO, breadcrumbSchema } from '@/components/SEO';
-import { ProductCard } from '@/components/ProductCard';
-import { PageHero } from '@/components/Section';
-import { Reveal } from '@/components/Reveal';
-import { productService } from '@/data/products';
-import { CATEGORY_LABELS, type ProductCategory } from '@/data/products';
+import { SEO, breadcrumbSchema } from '../components/SEO';
+import { ProductCard } from '../components/ProductCard';
+import { PageHero } from '../components/Section';
+import { Reveal } from '../components/Reveal';
+import { ProductService } from '../services/product-service';
 
-const categories: (ProductCategory | 'all')[] = ['all', 'moong', 'chana', 'urad', 'combo'];
+const categories = ['all', 'moong', 'chana', 'urad', 'combo'] as const;
+const CATEGORY_LABELS: Record<string, string> = {
+  moong: 'Moong Family',
+  chana: 'Chana Family',
+  urad: 'Urad Family',
+  combo: 'Combo Packs',
+};
 const packSizes = [200, 500, 1000, 235];
 
 export default function Products() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
 
-  const [category, setCategory] = useState<ProductCategory | 'all'>('all');
+  const [category, setCategory] = useState<string>('all');
   const [packFilter, setPackFilter] = useState<number | null>(null);
   const [search, setSearch] = useState(query);
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'name'>('default');
   const [showFilters, setShowFilters] = useState(false);
 
   const filtered = useMemo(() => {
-    let list = productService.getAll();
+    let list = ProductService.getAllProductFamilies();
 
     if (category !== 'all') {
       list = list.filter((p) => p.category === category);
     }
 
     if (search.trim()) {
-      const q = search.toLowerCase().trim();
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.variant.toLowerCase().includes(q) ||
-          p.hindiName.includes(q),
-      );
+      list = ProductService.searchProducts(search);
     }
 
     if (packFilter !== null) {
-      list = list.filter((p) => p.skus.some((s) => s.packSize === packFilter));
+      list = list.filter((p) =>
+        p.variants.some((v) => {
+          if (packFilter === 1000) return v.packSize.includes('1000') || v.packSize.includes('1kg');
+          if (packFilter === 235) return v.packSize.includes('235') || v.sku.includes('COMB');
+          return v.packSize.includes(String(packFilter));
+        })
+      );
     }
 
     switch (sortBy) {
       case 'price-low':
-        list = [...list].sort((a, b) => a.skus[0].websitePrice - b.skus[0].websitePrice);
+        list = [...list].sort((a, b) => a.variants[0].websitePrice - b.variants[0].websitePrice);
         break;
       case 'price-high':
-        list = [...list].sort((a, b) => b.skus[0].websitePrice - a.skus[0].websitePrice);
+        list = [...list].sort((a, b) => b.variants[0].websitePrice - a.variants[0].websitePrice);
         break;
       case 'name':
         list = [...list].sort((a, b) => a.name.localeCompare(b.name));
@@ -104,7 +109,7 @@ export default function Products() {
           </select>
           <button
             onClick={() => setShowFilters((s) => !s)}
-            className="btn-outline sm:hidden"
+            className="btn-outline sm:hidden flex items-center justify-center gap-2"
           >
             <Filter className="w-4 h-4" />
             Filters
@@ -187,13 +192,13 @@ export default function Products() {
               {activeFilterCount > 0 && (
                 <div className="hidden lg:flex items-center gap-2">
                   {category !== 'all' && (
-                    <span className="badge-brown flex items-center gap-1">
+                    <span className="badge-brown flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-50 text-xs text-brand-brown border border-amber-200">
                       {CATEGORY_LABELS[category]}
                       <X className="w-3 h-3 cursor-pointer" onClick={() => setCategory('all')} />
                     </span>
                   )}
                   {packFilter !== null && (
-                    <span className="badge-brown flex items-center gap-1">
+                    <span className="badge-brown flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-50 text-xs text-brand-brown border border-amber-200">
                       {packFilter === 1000 ? '1kg' : packFilter === 235 ? 'Combo' : `${packFilter}g`}
                       <X className="w-3 h-3 cursor-pointer" onClick={() => setPackFilter(null)} />
                     </span>
@@ -220,7 +225,7 @@ export default function Products() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {filtered.map((product, i) => (
                   <Reveal key={product.id} delay={Math.min(i * 50, 300)}>
-                    <ProductCard product={product} />
+                    <ProductCard product={product as any} />
                   </Reveal>
                 ))}
               </div>
