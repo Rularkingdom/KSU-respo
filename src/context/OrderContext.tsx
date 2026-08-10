@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { CartItem } from './CartContext';
+import { apiClient } from '../services/api-client';
 
 export interface CustomerInfo {
   fullName: string;
@@ -30,23 +31,22 @@ export interface Order {
 
 interface OrderContextValue {
   lastOrder: Order | null;
-  placeOrder: (customer: CustomerInfo, items: CartItem[], totals: {
-    subtotal: number;
-    totalShipping: number;
-    total: number;
-  }) => Order;
+  placeOrder: (
+    customer: CustomerInfo,
+    items: CartItem[],
+    totals: {
+      subtotal: number;
+      totalShipping: number;
+      total: number;
+    },
+    idempotencyKey?: string
+  ) => Promise<Order>;
   clearLastOrder: () => void;
 }
 
 const OrderContext = createContext<OrderContextValue | null>(null);
 
 const ORDER_STORAGE_KEY = 'kawad-swad-last-order-v1';
-
-function generateOrderId(): string {
-  const ts = Date.now().toString(36).toUpperCase().slice(-6);
-  const rand = Math.random().toString(36).toUpperCase().slice(2, 5);
-  return `KS-${ts}${rand}`;
-}
 
 export function OrderProvider({ children }: { children: ReactNode }) {
   const [lastOrder, setLastOrder] = useState<Order | null>(() => {
@@ -70,17 +70,19 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     }
   }, [lastOrder]);
 
-  const placeOrder: OrderContextValue['placeOrder'] = (customer, items, totals) => {
-    const order: Order = {
-      orderId: generateOrderId(),
+  const placeOrder: OrderContextValue['placeOrder'] = async (
+    customer,
+    items,
+    _totals,
+    idempotencyKey
+  ) => {
+    // Call real backend API
+    const order = await apiClient.createOrder({
       customer,
-      items: items.map((i) => ({ ...i })),
-      subtotal: totals.subtotal,
-      totalShipping: totals.totalShipping,
-      total: totals.total,
-      timestamp: new Date().toISOString(),
-      status: 'confirmed',
-    };
+      items,
+      idempotencyKey,
+    });
+
     setLastOrder(order);
     return order;
   };
