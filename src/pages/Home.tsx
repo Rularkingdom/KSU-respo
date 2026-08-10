@@ -14,17 +14,17 @@ import {
   Star,
   ArrowUpRight,
 } from 'lucide-react';
-import { SEO, organizationSchema } from '@/components/SEO';
-import { ProductCard } from '@/components/ProductCard';
-import { ProductImage } from '@/components/ProductImage';
-import { SectionHeading, PlaceholderImage } from '@/components/Section';
-import { Reveal, CTABanner } from '@/components/Reveal';
-import { productService } from '@/data/products';
-import { brand } from '@/data/brand';
-import { blogService } from '@/data/blog';
+import { SEO, organizationSchema } from '../components/SEO';
+import { ProductCard } from '../components/ProductCard';
+import { ProductImage } from '../components/ProductImage';
+import { SectionHeading, PlaceholderImage } from '../components/Section';
+import { Reveal, CTABanner } from '../components/Reveal';
+import { ProductService } from '../services/product-service';
+import { brand } from '../data/brand';
+import { blogService } from '../data/blog';
 
 export default function Home() {
-  const featured = productService.getFeatured();
+  const featured = ProductService.getFeaturedProducts();
   const latestPosts = blogService.getAll().slice(0, 3);
 
   return (
@@ -86,7 +86,7 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/20 to-brand-red/10 rounded-4xl blur-2xl" />
                     <div className="relative card overflow-hidden shadow-lift rounded-4xl">
                       <ProductImage
-                        product={featured[0]}
+                        product={featured[0] as any}
                         variant="hero"
                         className="w-full h-full"
                       />
