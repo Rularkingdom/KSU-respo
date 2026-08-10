@@ -6,8 +6,9 @@ import { ProductCard } from '../components/ProductCard';
 import { PageHero } from '../components/Section';
 import { Reveal } from '../components/Reveal';
 import { ProductService } from '../services/product-service';
+import { ProductCategory } from '../data/products';
 
-const categories = ['all', 'moong', 'chana', 'urad', 'combo'] as const;
+const categories: (ProductCategory | 'all')[] = ['all', 'moong', 'chana', 'urad', 'combo'];
 const CATEGORY_LABELS: Record<string, string> = {
   moong: 'Moong Family',
   chana: 'Chana Family',
@@ -20,7 +21,7 @@ export default function Shop() {
   const initialQuery = searchParams.get('q') || '';
 
   const [search, setSearch] = useState(initialQuery);
-  const [category, setCategory] = useState<string>('all');
+  const [category, setCategory] = useState<ProductCategory | 'all'>('all');
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'name'>('default');
   const [maxPrice, setMaxPrice] = useState(700);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -36,14 +37,14 @@ export default function Shop() {
       list = ProductService.searchProducts(search);
     }
 
-    list = list.filter((p) => p.variants[0].websitePrice <= maxPrice);
+    list = list.filter((p) => p.skus[0].websitePrice <= maxPrice);
 
     switch (sortBy) {
       case 'price-low':
-        list = [...list].sort((a, b) => a.variants[0].websitePrice - b.variants[0].websitePrice);
+        list = [...list].sort((a, b) => a.skus[0].websitePrice - b.skus[0].websitePrice);
         break;
       case 'price-high':
-        list = [...list].sort((a, b) => b.variants[0].websitePrice - a.variants[0].websitePrice);
+        list = [...list].sort((a, b) => b.skus[0].websitePrice - a.skus[0].websitePrice);
         break;
       case 'name':
         list = [...list].sort((a, b) => a.name.localeCompare(b.name));
@@ -98,7 +99,7 @@ export default function Shop() {
           </select>
           <button
             onClick={() => setShowMobileFilters((s) => !s)}
-            className="btn-outline lg:hidden"
+            className="btn-outline lg:hidden flex items-center justify-center gap-2"
           >
             <SlidersHorizontal className="w-4 h-4" />
             Filters
@@ -184,7 +185,7 @@ export default function Shop() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {filtered.map((product, i) => (
                   <Reveal key={product.id} delay={Math.min(i * 50, 300)}>
-                    <ProductCard product={product as any} />
+                    <ProductCard product={product} />
                   </Reveal>
                 ))}
               </div>
