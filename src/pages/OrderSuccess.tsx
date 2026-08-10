@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
-import { CheckCircle, Package, ArrowRight, ShoppingBag } from 'lucide-react';
+import { CheckCircle, Package, ArrowRight, ShoppingBag, Truck } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { useOrder } from '../context/OrderContext';
 import { formatPrice } from '../context/CartContext';
-import { ProductService } from '../services/product-service';
 import { PACK_LABELS } from '../data/products';
 
 export default function OrderSuccess() {
@@ -31,15 +30,6 @@ export default function OrderSuccess() {
     );
   }
 
-  const resolvedItems = lastOrder.items.map((item) => {
-    const res = ProductService.getProductBySku(item.sku);
-    return {
-      ...item,
-      product: res?.family,
-      skuObj: res?.skuObj,
-    };
-  });
-
   const totalUnits = lastOrder.items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -66,33 +56,51 @@ export default function OrderSuccess() {
               <span className="font-semibold text-brand-brown">{totalUnits} item{totalUnits !== 1 ? 's' : ''}</span>
             </div>
 
-            {/* Itemized Breakdown */}
+            {/* Itemized Breakdown via Historical Snapshots */}
             <div className="py-2 space-y-2 border-b border-brand-brown/10">
-              <p className="text-xs font-semibold text-brand-brown/50 uppercase tracking-wider mb-2">Ordered Items</p>
-              {resolvedItems.map(({ sku, quantity, product, skuObj }) => {
-                if (!product || !skuObj) return null;
-                const packLabel = PACK_LABELS[skuObj.packSize] || `${skuObj.packSize}g`;
+              <p className="text-xs font-semibold text-brand-brown/50 uppercase tracking-wider mb-2">
+                Ordered Items (Historical Snapshots)
+              </p>
+              {lastOrder.items.map((item, idx) => {
+                const name = item.productNameSnapshot || `SKU: ${item.sku}`;
+                const packLabel = item.packSizeSnapshot ? (PACK_LABELS[item.packSizeSnapshot] || `${item.packSizeSnapshot}g`) : '';
+                const lineTotal = item.unitPrice !== undefined ? item.unitPrice * item.quantity : undefined;
+
                 return (
-                  <div key={sku} className="flex justify-between text-sm">
-                    <span className="text-brand-brown/70">{product.name} ({packLabel}) × {quantity}</span>
-                    <span className="font-medium">{formatPrice(skuObj.websitePrice * quantity)}</span>
+                  <div key={idx} className="flex justify-between items-center text-sm py-1">
+                    <span className="text-brand-brown/70">
+                      {name} {packLabel && `(${packLabel})`} × {item.quantity}
+                    </span>
+                    {lineTotal !== undefined && (
+                      <span className="font-medium whitespace-nowrap">{formatPrice(lineTotal)}</span>
+                    )}
                   </div>
                 );
               })}
             </div>
 
-            <div className="flex justify-between gap-4 pt-2">
-              <span className="text-sm text-brand-brown/60">Order total (incl. shipping)</span>
-              <span className="font-bold text-brand-red text-lg">{formatPrice(lastOrder.total)}</span>
+            <div className="space-y-1.5 text-sm pt-2">
+              <div className="flex justify-between text-brand-brown/65">
+                <span>Subtotal</span>
+                <span>{formatPrice(lastOrder.subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-brand-brown/65">
+                <span>Shipping</span>
+                <span>{lastOrder.totalShipping ? formatPrice(lastOrder.totalShipping) : 'Free'}</span>
+              </div>
+              <div className="flex justify-between gap-4 pt-3 border-t border-brand-brown/10">
+                <span className="text-sm font-semibold text-brand-brown">Order total</span>
+                <span className="font-bold text-brand-red text-lg">{formatPrice(lastOrder.total)}</span>
+              </div>
             </div>
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
-            <Link to="/shop" className="btn-primary">
-              Continue Shopping <ArrowRight className="w-4 h-4" />
+            <Link to="/track-order" className="btn-primary inline-flex items-center gap-2">
+              <Truck className="w-4 h-4" /> Track Order Status
             </Link>
-            <Link to="/contact" className="btn-outline">
-              <Package className="w-4 h-4" /> Contact Support
+            <Link to="/shop" className="btn-outline">
+              Continue Shopping <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
