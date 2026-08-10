@@ -1,10 +1,9 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from .config import settings
 from .database import connect_to_mongo, close_mongo_connection
-from .models.order import CreateOrderRequest
-from .services.order_service import process_and_save_order
+from .routes.orders import router as orders_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -28,11 +27,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/health", tags=["Health"])
-async def health_check():
-    return {"status": "ok"}
-
-@app.post("/api/orders", status_code=status.HTTP_201_CREATED, tags=["Orders"])
-async def create_order(payload: CreateOrderRequest):
-    order = await process_and_save_order(payload)
-    return order
+# Include modular routes
+app.include_router(orders_router)
