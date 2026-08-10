@@ -6,21 +6,16 @@ import { ProductCard } from '../components/ProductCard';
 import { PageHero } from '../components/Section';
 import { Reveal } from '../components/Reveal';
 import { ProductService } from '../services/product-service';
+import { CATEGORY_LABELS, ProductCategory } from '../data/products';
 
-const categories = ['all', 'moong', 'chana', 'urad', 'combo'] as const;
-const CATEGORY_LABELS: Record<string, string> = {
-  moong: 'Moong Family',
-  chana: 'Chana Family',
-  urad: 'Urad Family',
-  combo: 'Combo Packs',
-};
+const categories: (ProductCategory | 'all')[] = ['all', 'moong', 'chana', 'urad', 'combo'];
 const packSizes = [200, 500, 1000, 235];
 
 export default function Products() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
 
-  const [category, setCategory] = useState<string>('all');
+  const [category, setCategory] = useState<ProductCategory | 'all'>('all');
   const [packFilter, setPackFilter] = useState<number | null>(null);
   const [search, setSearch] = useState(query);
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'name'>('default');
@@ -39,20 +34,16 @@ export default function Products() {
 
     if (packFilter !== null) {
       list = list.filter((p) =>
-        p.variants.some((v) => {
-          if (packFilter === 1000) return v.packSize.includes('1000') || v.packSize.includes('1kg');
-          if (packFilter === 235) return v.packSize.includes('235') || v.sku.includes('COMB');
-          return v.packSize.includes(String(packFilter));
-        })
+        p.skus.some((s) => s.packSize === packFilter)
       );
     }
 
     switch (sortBy) {
       case 'price-low':
-        list = [...list].sort((a, b) => a.variants[0].websitePrice - b.variants[0].websitePrice);
+        list = [...list].sort((a, b) => a.skus[0].websitePrice - b.skus[0].websitePrice);
         break;
       case 'price-high':
-        list = [...list].sort((a, b) => b.variants[0].websitePrice - a.variants[0].websitePrice);
+        list = [...list].sort((a, b) => b.skus[0].websitePrice - a.skus[0].websitePrice);
         break;
       case 'name':
         list = [...list].sort((a, b) => a.name.localeCompare(b.name));
@@ -225,7 +216,7 @@ export default function Products() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {filtered.map((product, i) => (
                   <Reveal key={product.id} delay={Math.min(i * 50, 300)}>
-                    <ProductCard product={product as any} />
+                    <ProductCard product={product} />
                   </Reveal>
                 ))}
               </div>
