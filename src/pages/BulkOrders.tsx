@@ -1,12 +1,12 @@
-import { SEO, breadcrumbSchema } from '@/components/SEO';
-import { PageHero } from '@/components/Section';
-import { Reveal } from '@/components/Reveal';
-import { FormField, FormStatusMessage, SubmitButton, useFormState, validators, simulateSubmit, FormContainer } from '@/components/Form';
-import { productService, CATEGORY_LABELS } from '@/data/products';
-import { brand } from '@/data/brand';
+import { SEO, breadcrumbSchema } from '../components/SEO';
+import { PageHero } from '../components/Section';
+import { FormField, FormStatusMessage, SubmitButton, useFormState, validators, simulateSubmit, FormContainer } from '../components/Form';
+import { ProductService } from '../services/product-service';
+import { CATEGORY_LABELS } from '../data/products';
+import { brand } from '../data/brand';
 import { Package, Phone, Mail, MessageCircle } from 'lucide-react';
 
-const productOptions = productService.getAll().map((p) => `${p.name} (${p.variant})`);
+const productOptions = ProductService.getAllProducts().map((p) => `${p.name} (${p.variant})`);
 
 export default function BulkOrders() {
   const form = useFormState({
