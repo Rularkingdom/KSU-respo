@@ -14,7 +14,8 @@ import {
 import { SEO, breadcrumbSchema } from '../components/SEO';
 import { ProductCard } from '../components/ProductCard';
 import { Reveal } from '../components/Reveal';
-import { ProductService, ProductFamily } from '../services/product-service';
+import { ProductService } from '../services/product-service';
+import { PACK_LABELS } from '../data/products';
 import { useCart } from '../context/CartContext';
 
 const brand = {
@@ -26,7 +27,7 @@ const brand = {
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const product = slug ? ProductService.getProductBySlug(slug) : undefined;
 
   const [selectedSkuIndex, setSelectedSkuIndex] = useState(0);
@@ -52,19 +53,19 @@ export default function ProductDetail() {
     );
   }
 
-  const selectedVariant = product.variants[selectedSkuIndex] || product.variants[0];
+  const selectedSku = product.skus[selectedSkuIndex] || product.skus[0];
   const discount = Math.round(
-    ((selectedVariant.mrp - selectedVariant.websitePrice) / selectedVariant.mrp) * 100
+    ((selectedSku.mrp - selectedSku.websitePrice) / selectedSku.mrp) * 100
   );
 
   const handleAddToCart = () => {
-    addToCart(selectedVariant.sku, quantity);
+    addItem(selectedSku.sku, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
 
   const handleBuyNow = () => {
-    addToCart(selectedVariant.sku, quantity);
+    addItem(selectedSku.sku, quantity);
     navigate('/checkout');
   };
 
@@ -100,10 +101,10 @@ export default function ProductDetail() {
             <div className="relative aspect-square card overflow-hidden rounded-4xl shadow-card bg-amber-50/40 flex items-center justify-center p-8 border border-amber-100">
               <div className="absolute top-4 left-4 flex gap-2">
                 <span className="bg-[#FBEC0A] text-[#4E342E] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                  {selectedVariant.packSize}
+                  {PACK_LABELS[selectedSku.packSize] || `${selectedSku.packSize}g`}
                 </span>
                 <span className="bg-white/80 text-gray-700 text-xs font-mono px-2.5 py-1 rounded-md border border-amber-200">
-                  {selectedVariant.sku}
+                  {selectedSku.sku}
                 </span>
               </div>
               <div className="w-64 h-64 rounded-full border-8 border-dashed border-[#FE330E]/30 flex items-center justify-center bg-white shadow-inner">
@@ -137,9 +138,9 @@ export default function ProductDetail() {
             <div className="mt-6">
               <p className="label-field">Select Pack Size / SKU</p>
               <div className="flex flex-wrap gap-2">
-                {product.variants.map((v, i) => (
+                {product.skus.map((s, i) => (
                   <button
-                    key={v.sku}
+                    key={s.sku}
                     onClick={() => setSelectedSkuIndex(i)}
                     className={`px-4 py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${
                       selectedSkuIndex === i
@@ -147,8 +148,8 @@ export default function ProductDetail() {
                         : 'border-brand-brown/15 text-brand-brown hover:border-brand-brown/30 bg-white'
                     }`}
                   >
-                    {v.packSize}
-                    <span className="block text-2xs font-mono opacity-60 mt-0.5">{v.sku}</span>
+                    {PACK_LABELS[s.packSize] || `${s.packSize}g`}
+                    <span className="block text-2xs font-mono opacity-60 mt-0.5">{s.sku}</span>
                   </button>
                 ))}
               </div>
@@ -158,23 +159,23 @@ export default function ProductDetail() {
             <div className="mt-6 p-5 rounded-2xl bg-amber-50/50 border border-amber-100">
               <div className="flex items-baseline gap-3">
                 <span className="text-3xl font-bold text-brand-red">
-                  ₹{selectedVariant.websitePrice}
+                  ₹{selectedSku.websitePrice}
                 </span>
                 <span className="text-lg text-brand-brown/40 line-through">
-                  ₹{selectedVariant.mrp}
+                  ₹{selectedSku.mrp}
                 </span>
                 {discount > 0 && (
                   <span className="badge-red">Save {discount}%</span>
                 )}
               </div>
               <div className="mt-2 flex items-center gap-2 text-sm">
-                {selectedVariant.shipping === 0 ? (
+                {selectedSku.freeShipping ? (
                   <span className="text-emerald-600 font-medium flex items-center gap-1">
                     <Truck className="w-4 h-4" /> Free Shipping Included
                   </span>
                 ) : (
                   <span className="text-brand-brown/60 flex items-center gap-1">
-                    <Truck className="w-4 h-4" /> Standard Shipping: ₹{selectedVariant.shipping}
+                    <Truck className="w-4 h-4" /> Standard Shipping: ₹{selectedSku.shipping}
                   </span>
                 )}
               </div>
@@ -266,11 +267,11 @@ export default function ProductDetail() {
             <dl className="space-y-2 text-sm">
               <div className="flex justify-between border-b border-gray-100 pb-1.5">
                 <dt className="text-brand-brown/60">Active SKU</dt>
-                <dd className="font-mono font-medium text-brand-brown">{selectedVariant.sku}</dd>
+                <dd className="font-mono font-medium text-brand-brown">{selectedSku.sku}</dd>
               </div>
               <div className="flex justify-between border-b border-gray-100 pb-1.5">
                 <dt className="text-brand-brown/60">Selected Pack Size</dt>
-                <dd className="font-medium text-brand-brown">{selectedVariant.packSize}</dd>
+                <dd className="font-medium text-brand-brown">{PACK_LABELS[selectedSku.packSize] || `${selectedSku.packSize}g`}</dd>
               </div>
               <div className="flex justify-between border-b border-gray-100 pb-1.5">
                 <dt className="text-brand-brown/60">Diet Type</dt>
@@ -298,7 +299,7 @@ export default function ProductDetail() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {relatedProducts.map((p, i) => (
               <Reveal key={p.id} delay={i * 60}>
-                <ProductCard product={p as any} />
+                <ProductCard product={p} />
               </Reveal>
             ))}
           </div>
