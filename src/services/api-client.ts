@@ -9,26 +9,49 @@ export interface CreateOrderPayload {
   idempotencyKey?: string;
 }
 
+export type OrderStatusType = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+
+export interface TrackedOrderItem {
+  sku: string;
+  quantity: number;
+  unitPrice: number;
+  productNameSnapshot: string;
+  packSizeSnapshot: number;
+}
+
 export interface TrackedOrder {
   orderId: string;
-  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status: OrderStatusType;
   customer: {
     fullName: string;
     phoneMasked: string;
     city: string;
     state: string;
   };
-  items: Array<{
-    sku: string;
-    quantity: number;
-    unitPrice: number;
-    productNameSnapshot: string;
-    packSizeSnapshot: number;
-  }>;
+  items: TrackedOrderItem[];
   subtotal: number;
   shipping: number;
   total: number;
   createdAt: string;
+}
+
+interface BackendResponseItem {
+  sku: string;
+  quantity: number;
+  unitPrice?: number;
+  productNameSnapshot?: string;
+  packSizeSnapshot?: number;
+}
+
+interface BackendOrderResponse {
+  orderId: string;
+  customer: CustomerInfo;
+  items: BackendResponseItem[];
+  subtotal: number;
+  shipping: number;
+  total: number;
+  createdAt: string;
+  status: OrderStatusType;
 }
 
 export const apiClient = {
@@ -39,7 +62,7 @@ export const apiClient = {
         headers: { 'Content-Type': 'application/json' },
       });
       if (!res.ok) return false;
-      const data = await res.json();
+      const data = (await res.json()) as { status: string };
       return data.status === 'ok';
     } catch {
       return false;
@@ -58,7 +81,7 @@ export const apiClient = {
     if (!response.ok) {
       let errorMsg = 'Failed to submit order request.';
       try {
-        const errorData = await response.json();
+        const errorData = (await response.json()) as { detail?: string | unknown };
         if (errorData.detail) {
           errorMsg = typeof errorData.detail === 'string' 
             ? errorData.detail 
@@ -70,15 +93,17 @@ export const apiClient = {
       throw new Error(errorMsg);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as BackendOrderResponse;
     
-    // Map backend response to frontend Order structure
     return {
       orderId: data.orderId,
       customer: data.customer,
-      items: data.items.map((i: any) => ({
+      items: data.items.map((i) => ({
         sku: i.sku,
         quantity: i.quantity,
+        unitPrice: i.unitPrice,
+        productNameSnapshot: i.productNameSnapshot,
+        packSizeSnapshot: i.packSizeSnapshot,
       })),
       subtotal: data.subtotal,
       totalShipping: data.shipping,
@@ -101,9 +126,11 @@ export const apiClient = {
       let errorMsg = 'Order not found or verification failed.';
       if (response.status === 404) {
         errorMsg = 'No order found matching this Order ID and Phone number.';
+      } else if (response.status === 429) {
+        errorMsg = 'Too many tracking attempts. Please wait a minute before trying again.';
       } else {
         try {
-          const errData = await response.json();
+          const errData = (await response.json()) as { detail?: string };
           if (errData.detail) {
             errorMsg = typeof errData.detail === 'string' ? errData.detail : errorMsg;
           }
@@ -114,6 +141,6 @@ export const apiClient = {
       throw new Error(errorMsg);
     }
 
-    return await response.json();
+    return (await response.json()) as TrackedOrder;
   },
 };
