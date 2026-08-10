@@ -1,11 +1,11 @@
-import { products, ProductFamily, Sku } from '../data/products';
+import { products, ProductFamily, Sku, ProductCategory } from '../data/products';
 
 export interface FlatProductItem {
   familyId: string;
   slug: string;
   name: string;
   hindiName: string;
-  category: 'moong' | 'chana' | 'urad' | 'combo';
+  category: ProductCategory;
   description: string;
   sku: string;
   packSize: number | string;
@@ -17,6 +17,10 @@ export interface FlatProductItem {
 }
 
 export const ProductService = {
+  getAll(): ProductFamily[] {
+    return products;
+  },
+
   getAllProducts(): ProductFamily[] {
     return products;
   },
@@ -25,22 +29,16 @@ export const ProductService = {
     return products;
   },
 
+  getBySlug(slug: string): ProductFamily | undefined {
+    return products.find((p) => p.slug === slug);
+  },
+
   getProductBySlug(slug: string): ProductFamily | undefined {
     return products.find((p) => p.slug === slug);
   },
 
-  getProductBySku(sku: string): { family: ProductFamily; skuObj: Sku } | undefined {
-    for (const family of products) {
-      const skuObj = family.skus.find((s) => s.sku === sku);
-      if (skuObj) {
-        return { family, skuObj };
-      }
-    }
-    return undefined;
-  },
-
-  getFeaturedProducts(): ProductFamily[] {
-    return products.filter((p) => p.featured);
+  getByCategory(category: ProductCategory): ProductFamily[] {
+    return products.filter((p) => p.category === category);
   },
 
   getProductsByCategory(category: string): ProductFamily[] {
@@ -48,17 +46,51 @@ export const ProductService = {
     return products.filter((p) => p.category === category);
   },
 
-  searchProducts(query: string): ProductFamily[] {
-    if (!query.trim()) return products;
+  getFeatured(): ProductFamily[] {
+    return products.filter((p) => p.featured);
+  },
+
+  getFeaturedProducts(): ProductFamily[] {
+    return products.filter((p) => p.featured);
+  },
+
+  getSkuByCode(skuCode: string): { product: ProductFamily; sku: Sku } | undefined {
+    for (const product of products) {
+      const sku = product.skus.find((s) => s.sku === skuCode);
+      if (sku) return { product, sku };
+    }
+    return undefined;
+  },
+
+  getProductBySku(skuCode: string): { family: ProductFamily; skuObj: Sku } | undefined {
+    const res = this.getSkuByCode(skuCode);
+    if (!res) return undefined;
+    return { family: res.product, skuObj: res.sku };
+  },
+
+  search(query: string): ProductFamily[] {
     const q = query.toLowerCase().trim();
+    if (!q) return products;
     return products.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.hindiName.includes(q) ||
+        p.variant.toLowerCase().includes(q) ||
+        p.category.includes(q) ||
         p.description.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
-        p.skus.some((s) => s.sku.toLowerCase().includes(q) || String(s.packSize).includes(q))
+        p.skus.some((s) => s.sku.toLowerCase().includes(q) || String(s.packSize).includes(q)),
     );
+  },
+
+  searchProducts(query: string): ProductFamily[] {
+    return this.search(query);
+  },
+
+  getRelated(product: ProductFamily, count = 4): ProductFamily[] {
+    return products
+      .filter((p) => p.id !== product.id && p.category === product.category)
+      .concat(products.filter((p) => p.id !== product.id && p.category !== product.category))
+      .slice(0, count);
   },
 
   getAllFlatItems(): FlatProductItem[] {
@@ -85,3 +117,5 @@ export const ProductService = {
     return list;
   },
 };
+
+export const productService = ProductService;
