@@ -22,22 +22,35 @@ export default function Products() {
   const [showFilters, setShowFilters] = useState(false);
 
   const filtered = useMemo(() => {
-    let list = ProductService.getAllProductFamilies();
+    let list = ProductService.getAllProducts();
 
+    // 1. Compose Category Filter
     if (category !== 'all') {
       list = list.filter((p) => p.category === category);
     }
 
+    // 2. Compose Search Filter
     if (search.trim()) {
-      list = ProductService.searchProducts(search);
+      const q = search.toLowerCase().trim();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.hindiName.includes(q) ||
+          p.variant.toLowerCase().includes(q) ||
+          p.category.includes(q) ||
+          p.description.toLowerCase().includes(q) ||
+          p.skus.some((s) => s.sku.toLowerCase().includes(q) || String(s.packSize).includes(q))
+      );
     }
 
+    // 3. Compose Pack Filter
     if (packFilter !== null) {
       list = list.filter((p) =>
         p.skus.some((s) => s.packSize === packFilter)
       );
     }
 
+    // 4. Sort
     switch (sortBy) {
       case 'price-low':
         list = [...list].sort((a, b) => a.skus[0].websitePrice - b.skus[0].websitePrice);
