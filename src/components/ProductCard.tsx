@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Check } from 'lucide-react';
-import type { ProductFamily } from '@/data/products';
-import { PACK_LABELS } from '@/data/products';
-import { ProductImage } from '@/components/ProductImage';
-import { useCart, formatPrice } from '@/context/CartContext';
+import type { ProductFamily } from '../data/products';
+import { PACK_LABELS } from '../data/products';
+import { ProductImage } from '../components/ProductImage';
+import { useCart, formatPrice } from '../context/CartContext';
 
 interface ProductCardProps {
   product: ProductFamily;
@@ -92,7 +92,7 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
 
           <button
             onClick={handleAdd}
-            className={`w-full ${added ? 'btn-secondary' : 'btn-outline'} text-sm py-2.5`}
+            className={`w-full ${added ? 'btn-secondary' : 'btn-outline'} text-sm py-2.5 flex items-center justify-center gap-2`}
             aria-label={`Add ${product.name} to cart`}
           >
             {added ? (
