@@ -2,9 +2,10 @@ import {
   createContext,
   useContext,
   useState,
+  useEffect,
   type ReactNode,
 } from 'react';
-import type { CartItem } from '@/context/CartContext';
+import type { CartItem } from './CartContext';
 
 export interface CustomerInfo {
   fullName: string;
@@ -24,7 +25,7 @@ export interface Order {
   totalShipping: number;
   total: number;
   timestamp: string;
-  status: 'pending';
+  status: 'pending' | 'confirmed';
 }
 
 interface OrderContextValue {
@@ -39,6 +40,8 @@ interface OrderContextValue {
 
 const OrderContext = createContext<OrderContextValue | null>(null);
 
+const ORDER_STORAGE_KEY = 'kawad-swad-last-order-v1';
+
 function generateOrderId(): string {
   const ts = Date.now().toString(36).toUpperCase().slice(-6);
   const rand = Math.random().toString(36).toUpperCase().slice(2, 5);
@@ -46,7 +49,26 @@ function generateOrderId(): string {
 }
 
 export function OrderProvider({ children }: { children: ReactNode }) {
-  const [lastOrder, setLastOrder] = useState<Order | null>(null);
+  const [lastOrder, setLastOrder] = useState<Order | null>(() => {
+    try {
+      const saved = localStorage.getItem(ORDER_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      if (lastOrder) {
+        localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(lastOrder));
+      } else {
+        localStorage.removeItem(ORDER_STORAGE_KEY);
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, [lastOrder]);
 
   const placeOrder: OrderContextValue['placeOrder'] = (customer, items, totals) => {
     const order: Order = {
@@ -57,13 +79,20 @@ export function OrderProvider({ children }: { children: ReactNode }) {
       totalShipping: totals.totalShipping,
       total: totals.total,
       timestamp: new Date().toISOString(),
-      status: 'pending',
+      status: 'confirmed',
     };
     setLastOrder(order);
     return order;
   };
 
-  const clearLastOrder = () => setLastOrder(null);
+  const clearLastOrder = () => {
+    setLastOrder(null);
+    try {
+      localStorage.removeItem(ORDER_STORAGE_KEY);
+    } catch {
+      // ignore storage errors
+    }
+  };
 
   return (
     <OrderContext.Provider value={{ lastOrder, placeOrder, clearLastOrder }}>
