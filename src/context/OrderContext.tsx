@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { CartItem } from './CartContext';
-import { apiClient } from '../services/api-client';
+import { apiClient, OrderStatusType } from '../services/api-client';
 
 export interface CustomerInfo {
   fullName: string;
@@ -18,15 +18,21 @@ export interface CustomerInfo {
   pincode: string;
 }
 
+export interface OrderItemSnapshotItem extends CartItem {
+  unitPrice?: number;
+  productNameSnapshot?: string;
+  packSizeSnapshot?: number;
+}
+
 export interface Order {
   orderId: string;
   customer: CustomerInfo;
-  items: CartItem[];
+  items: OrderItemSnapshotItem[];
   subtotal: number;
   totalShipping: number;
   total: number;
   timestamp: string;
-  status: 'pending' | 'confirmed';
+  status: OrderStatusType;
 }
 
 interface OrderContextValue {
@@ -52,7 +58,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   const [lastOrder, setLastOrder] = useState<Order | null>(() => {
     try {
       const saved = localStorage.getItem(ORDER_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : null;
+      return saved ? (JSON.parse(saved) as Order) : null;
     } catch {
       return null;
     }
