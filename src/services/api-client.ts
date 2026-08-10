@@ -9,6 +9,28 @@ export interface CreateOrderPayload {
   idempotencyKey?: string;
 }
 
+export interface TrackedOrder {
+  orderId: string;
+  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  customer: {
+    fullName: string;
+    phoneMasked: string;
+    city: string;
+    state: string;
+  };
+  items: Array<{
+    sku: string;
+    quantity: number;
+    unitPrice: number;
+    productNameSnapshot: string;
+    packSizeSnapshot: number;
+  }>;
+  subtotal: number;
+  shipping: number;
+  total: number;
+  createdAt: string;
+}
+
 export const apiClient = {
   async checkHealth(): Promise<boolean> {
     try {
@@ -64,5 +86,34 @@ export const apiClient = {
       timestamp: data.createdAt,
       status: data.status,
     };
+  },
+
+  async trackOrder(orderId: string, phone: string): Promise<TrackedOrder> {
+    const response = await fetch(
+      `${API_BASE_URL}/api/orders/${encodeURIComponent(orderId.trim())}?phone=${encodeURIComponent(phone.trim())}`,
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+
+    if (!response.ok) {
+      let errorMsg = 'Order not found or verification failed.';
+      if (response.status === 404) {
+        errorMsg = 'No order found matching this Order ID and Phone number.';
+      } else {
+        try {
+          const errData = await response.json();
+          if (errData.detail) {
+            errorMsg = typeof errData.detail === 'string' ? errData.detail : errorMsg;
+          }
+        } catch {
+          // fallback
+        }
+      }
+      throw new Error(errorMsg);
+    }
+
+    return await response.json();
   },
 };
