@@ -10,9 +10,16 @@ db = Database()
 async def connect_to_mongo():
     db.client = AsyncIOMotorClient(settings.mongodb_uri)
     db.db = db.client[settings.mongodb_database]
+    
     # Ping to verify connection
     await db.client.admin.command('ping')
-    print("Connected to MongoDB successfully!")
+    
+    # Ensure indexes for order lookups & idempotency
+    orders_col = db.db["orders"]
+    await orders_col.create_index("orderId", unique=True)
+    await orders_col.create_index("idempotencyKey", sparse=True)
+    
+    print("Connected to MongoDB & indexes verified successfully!")
 
 async def close_mongo_connection():
     if db.client:
