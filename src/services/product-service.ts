@@ -17,28 +17,12 @@ export interface FlatProductItem {
 }
 
 export const ProductService = {
-  getAll(): ProductFamily[] {
-    return products;
-  },
-
   getAllProducts(): ProductFamily[] {
     return products;
   },
 
-  getAllProductFamilies(): ProductFamily[] {
-    return products;
-  },
-
-  getBySlug(slug: string): ProductFamily | undefined {
-    return products.find((p) => p.slug === slug);
-  },
-
   getProductBySlug(slug: string): ProductFamily | undefined {
     return products.find((p) => p.slug === slug);
-  },
-
-  getByCategory(category: ProductCategory): ProductFamily[] {
-    return products.filter((p) => p.category === category);
   },
 
   getProductsByCategory(category: string): ProductFamily[] {
@@ -46,29 +30,19 @@ export const ProductService = {
     return products.filter((p) => p.category === category);
   },
 
-  getFeatured(): ProductFamily[] {
-    return products.filter((p) => p.featured);
-  },
-
   getFeaturedProducts(): ProductFamily[] {
     return products.filter((p) => p.featured);
   },
 
-  getSkuByCode(skuCode: string): { product: ProductFamily; sku: Sku } | undefined {
+  getProductBySku(skuCode: string): { family: ProductFamily; skuObj: Sku } | undefined {
     for (const product of products) {
-      const sku = product.skus.find((s) => s.sku === skuCode);
-      if (sku) return { product, sku };
+      const skuObj = product.skus.find((s) => s.sku === skuCode);
+      if (skuObj) return { family: product, skuObj };
     }
     return undefined;
   },
 
-  getProductBySku(skuCode: string): { family: ProductFamily; skuObj: Sku } | undefined {
-    const res = this.getSkuByCode(skuCode);
-    if (!res) return undefined;
-    return { family: res.product, skuObj: res.sku };
-  },
-
-  search(query: string): ProductFamily[] {
+  searchProducts(query: string): ProductFamily[] {
     const q = query.toLowerCase().trim();
     if (!q) return products;
     return products.filter(
@@ -82,11 +56,7 @@ export const ProductService = {
     );
   },
 
-  searchProducts(query: string): ProductFamily[] {
-    return this.search(query);
-  },
-
-  getRelated(product: ProductFamily, count = 4): ProductFamily[] {
+  getRelatedProducts(product: ProductFamily, count = 4): ProductFamily[] {
     return products
       .filter((p) => p.id !== product.id && p.category === product.category)
       .concat(products.filter((p) => p.id !== product.id && p.category !== product.category))
@@ -117,5 +87,3 @@ export const ProductService = {
     return list;
   },
 };
-
-export const productService = ProductService;
