@@ -4,7 +4,7 @@ import string
 from datetime import datetime
 from ..database import get_database
 from ..models.product import find_sku_in_backend
-from ..models.order import CreateOrderRequest, OrderDocument, OrderItemSnapshot
+from ..models.order import CreateOrderRequest, OrderDocument, OrderItemSnapshot, OrderTrackingResponse, PublicCustomerSnapshot
 
 def generate_backend_order_id() -> str:
     ts = str(int(datetime.utcnow().timestamp()))[-6:]
@@ -75,3 +75,40 @@ async def process_and_save_order(payload: CreateOrderRequest):
     
     doc_dict.pop("_id", None)
     return doc_dict
+
+async def get_order_by_id_and_phone(order_id: str, phone: str):
+    db = get_database()
+    orders_collection = db["orders"]
+
+    # Normalize inputs
+    clean_order_id = order_id.strip().upper()
+    clean_phone = phone.strip()
+
+    order = await orders_collection.find_one({"orderId": clean_order_id})
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found.")
+
+    # Verify phone number matches customer record securely
+    stored_phone = order.get("customer", {}).get("phone", "")
+    if stored_phone != clean_phone:
+        raise HTTPException(status_code=404, detail="Order not found with provided details.")
+
+    customer_info = order.get("customer", {})
+    raw_phone = customer_info.get("phone", "----------")
+    masked_phone = f"******{raw_phone[-4:]}" if len(raw_phone) >= 4 else "******"
+
+    return OrderTrackingResponse(
+        orderId=order["orderId"],
+        status=order.get("status", "pending"),
+        customer=PublicCustomerSnapshot(
+            fullName=customer_info.get("fullName", "Valued Customer"),
+            phoneMasked=masked_phone,
+            city=customer_info.get("city", ""),
+            state=customer_info.get("state", "")
+        ),
+        items=order.get("items", []),
+        subtotal=order.get("subtotal", 0),
+        shipping=order.get("shipping", 0),
+        total=order.get("total", 0),
+        createdAt=order.get("createdAt", datetime.utcnow())
+    )
