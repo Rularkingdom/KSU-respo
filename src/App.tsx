@@ -16,6 +16,7 @@ const Shop = lazy(() => import('@/pages/Shop'));
 const Cart = lazy(() => import('@/pages/Cart'));
 const Checkout = lazy(() => import('@/pages/Checkout'));
 const OrderSuccess = lazy(() => import('@/pages/OrderSuccess'));
+const TrackOrder = lazy(() => import('@/pages/TrackOrder'));
 const Business = lazy(() => import('@/pages/Business'));
 const BulkOrders = lazy(() => import('@/pages/BulkOrders'));
 const Distributor = lazy(() => import('@/pages/Distributor'));
@@ -68,6 +69,7 @@ export default function App() {
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/order-success" element={<OrderSuccess />} />
+                  <Route path="/track-order" element={<TrackOrder />} />
                   <Route path="/business" element={<Business />} />
                   <Route path="/bulk-orders" element={<BulkOrders />} />
                   <Route path="/distributor" element={<Distributor />} />
