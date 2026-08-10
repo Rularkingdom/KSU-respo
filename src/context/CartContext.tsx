@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { ProductService } from '../services/product-service';
+import { calculateCartTotals } from '../utils/cart-calculations';
 
 export interface CartItem {
   sku: string;
@@ -20,11 +20,27 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const STORAGE_KEY = 'kawad-swad-cart-v1';
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => {
     try {
-      const saved = localStorage.getItem('kawad_swad_cart');
-      return saved ? JSON.parse(saved) : [];
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) return [];
+      
+      // Validate and sanitize stored items using our calculation utility
+      const valid: CartItem[] = [];
+      for (const item of parsed) {
+        if (item && typeof item.sku === 'string' && typeof item.quantity === 'number' && item.quantity > 0) {
+          valid.push({ sku: item.sku, quantity: Math.floor(item.quantity) });
+        }
+      }
+      
+      // Re-verify against active catalog
+      const evaluated = calculateCartTotals(valid);
+      return evaluated.resolvedItems.map((r) => ({ sku: r.sku, quantity: r.quantity }));
     } catch {
       return [];
     }
@@ -32,21 +48,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem('kawad_swad_cart', JSON.stringify(items));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     } catch {
       // ignore storage errors
     }
   }, [items]);
 
   const addItem = (sku: string, quantity = 1) => {
+    if (!sku || quantity <= 0) return;
+    const qty = Math.floor(quantity);
     setItems((prev) => {
       const existing = prev.find((item) => item.sku === sku);
       if (existing) {
         return prev.map((item) =>
-          item.sku === sku ? { ...item, quantity: item.quantity + quantity } : item
+          item.sku === sku ? { ...item, quantity: item.quantity + qty } : item
         );
       }
-      return [...prev, { sku, quantity }];
+      return [...prev, { sku, quantity: qty }];
     });
   };
 
@@ -59,8 +77,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeItem(sku);
       return;
     }
+    const qty = Math.floor(quantity);
     setItems((prev) =>
-      prev.map((item) => (item.sku === sku ? { ...item, quantity } : item))
+      prev.map((item) => (item.sku === sku ? { ...item, quantity: qty } : item))
     );
   };
 
@@ -68,27 +87,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems([]);
   };
 
-  // Calculate totals strictly from the canonical ProductService data
-  const { subtotal, shippingTotal } = items.reduce(
-    (acc, item) => {
-      const productData = ProductService.getProductBySku(item.sku);
-      if (productData) {
-        const itemSubtotal = productData.skuObj.websitePrice * item.quantity;
-        const itemShipping = productData.skuObj.freeShipping ? 0 : productData.skuObj.shipping * item.quantity;
-        return {
-          subtotal: acc.subtotal + itemSubtotal,
-          // Use maximum shipping cost or accumulate based on your business rules
-          // Currently takes the highest shipping bracket
-          shippingTotal: Math.max(acc.shippingTotal, itemShipping),
-        };
-      }
-      return acc;
-    },
-    { subtotal: 0, shippingTotal: 0 }
-  );
-
-  const total = subtotal + shippingTotal;
-  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  // Centralized calculations
+  const { subtotal, shippingTotal, total, itemCount } = calculateCartTotals(items);
 
   return (
     <CartContext.Provider
