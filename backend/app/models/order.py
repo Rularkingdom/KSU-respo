@@ -38,3 +38,19 @@ class OrderDocument(BaseModel):
     idempotencyKey: Optional[str] = None
     createdAt: datetime = Field(default_factory=datetime.utcnow)
     updatedAt: datetime = Field(default_factory=datetime.utcnow)
+
+class PublicCustomerSnapshot(BaseModel):
+    fullName: str
+    phoneMasked: str
+    city: str
+    state: str
+
+class OrderTrackingResponse(BaseModel):
+    orderId: str
+    status: str
+    customer: PublicCustomerSnapshot
+    items: List[OrderItemSnapshot]
+    subtotal: int
+    shipping: int
+    total: int
+    createdAt: datetime
