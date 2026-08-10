@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Lock, ShoppingBag } from 'lucide-react';
 import { SEO } from '../components/SEO';
-import { FormField, FormStatusMessage, SubmitButton, useFormState, validators, simulateSubmit, FormContainer } from '../components/Form';
+import { FormField, FormStatusMessage, SubmitButton, useFormState, validators, FormContainer } from '../components/Form';
 import { useCart, formatPrice } from '../context/CartContext';
 import { useOrder, type CustomerInfo } from '../context/OrderContext';
 import { ProductService } from '../services/product-service';
@@ -42,13 +42,25 @@ export default function Checkout() {
     
     form.setStatus('submitting');
     setError('');
+    
     try {
-      await simulateSubmit(form.values);
-      placeOrder(form.values, items, { subtotal, totalShipping: shippingTotal, total });
+      // Generate a unique idempotency key for this checkout attempt
+      const idempotencyKey = `idemp-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+      // Await real backend order placement (server calculates authoritative prices & shipping)
+      await placeOrder(
+        form.values,
+        items,
+        { subtotal, totalShipping: shippingTotal, total },
+        idempotencyKey
+      );
+
+      // Clear cart only after successful backend order creation
       clearCart();
       navigate('/order-success');
-    } catch {
-      setError('We could not submit your order. Please try again.');
+    } catch (err: any) {
+      const msg = err?.message || 'We could not submit your order right now. Please try again.';
+      setError(msg);
       form.setStatus('error');
     }
   };
@@ -68,7 +80,7 @@ export default function Checkout() {
 
   return (
     <>
-      <SEO title="Checkout" description="Complete your Kawad Swad papad order." path="/checkout" />
+      <SEO title="Checkout" description="Complete your Kawad Swad order." path="/checkout" />
       <div className="container-max container-px py-10 lg:py-14">
         <div className="flex items-center gap-2 text-xs text-brand-brown/50 mb-8">
           <Link to="/cart" className="hover:text-brand-red">Cart</Link>
@@ -99,7 +111,11 @@ export default function Checkout() {
                 <FormField label="PIN Code" name="pincode" type="text" value={form.values.pincode} onChange={(v) => form.setValue('pincode', v)} error={form.errors.pincode} required placeholder="6 digits" />
               </div>
             </FormContainer>
-            {error && <div className="mt-5"><FormStatusMessage status="error" successMsg="" /></div>}
+            {error && (
+              <div className="mt-5">
+                <FormStatusMessage status="error" successMsg="" errorMsg={error} />
+              </div>
+            )}
             <div className="mt-7 flex flex-col sm:flex-row gap-3 items-center justify-between">
               <Link to="/cart" className="inline-flex items-center gap-2 text-sm text-brand-brown/65 hover:text-brand-red">
                 <ArrowLeft className="w-4 h-4" /> Back to cart
