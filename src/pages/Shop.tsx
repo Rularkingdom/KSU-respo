@@ -1,43 +1,49 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
-import { SEO, breadcrumbSchema } from '@/components/SEO';
-import { ProductCard } from '@/components/ProductCard';
-import { PageHero } from '@/components/Section';
-import { Reveal } from '@/components/Reveal';
-import { productService, CATEGORY_LABELS, type ProductCategory } from '@/data/products';
+import { SEO, breadcrumbSchema } from '../components/SEO';
+import { ProductCard } from '../components/ProductCard';
+import { PageHero } from '../components/Section';
+import { Reveal } from '../components/Reveal';
+import { ProductService } from '../services/product-service';
 
-const categories: (ProductCategory | 'all')[] = ['all', 'moong', 'chana', 'urad', 'combo'];
+const categories = ['all', 'moong', 'chana', 'urad', 'combo'] as const;
+const CATEGORY_LABELS: Record<string, string> = {
+  moong: 'Moong Family',
+  chana: 'Chana Family',
+  urad: 'Urad Family',
+  combo: 'Combo Packs',
+};
 
 export default function Shop() {
   const [searchParams] = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
 
   const [search, setSearch] = useState(initialQuery);
-  const [category, setCategory] = useState<ProductCategory | 'all'>('all');
+  const [category, setCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'name'>('default');
   const [maxPrice, setMaxPrice] = useState(700);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const filtered = useMemo(() => {
-    let list = productService.getAll();
+    let list = ProductService.getAllProductFamilies();
 
     if (category !== 'all') {
       list = list.filter((p) => p.category === category);
     }
 
     if (search.trim()) {
-      list = productService.search(search);
+      list = ProductService.searchProducts(search);
     }
 
-    list = list.filter((p) => p.skus[0].websitePrice <= maxPrice);
+    list = list.filter((p) => p.variants[0].websitePrice <= maxPrice);
 
     switch (sortBy) {
       case 'price-low':
-        list = [...list].sort((a, b) => a.skus[0].websitePrice - b.skus[0].websitePrice);
+        list = [...list].sort((a, b) => a.variants[0].websitePrice - b.variants[0].websitePrice);
         break;
       case 'price-high':
-        list = [...list].sort((a, b) => b.skus[0].websitePrice - a.skus[0].websitePrice);
+        list = [...list].sort((a, b) => b.variants[0].websitePrice - a.variants[0].websitePrice);
         break;
       case 'name':
         list = [...list].sort((a, b) => a.name.localeCompare(b.name));
@@ -178,7 +184,7 @@ export default function Shop() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {filtered.map((product, i) => (
                   <Reveal key={product.id} delay={Math.min(i * 50, 300)}>
-                    <ProductCard product={product} />
+                    <ProductCard product={product as any} />
                   </Reveal>
                 ))}
               </div>
