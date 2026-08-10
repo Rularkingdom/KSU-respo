@@ -1,6 +1,15 @@
 from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional
 from datetime import datetime
+from enum import Enum
+
+class OrderStatus(str, Enum):
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    PROCESSING = "processing"
+    SHIPPED = "shipped"
+    DELIVERED = "delivered"
+    CANCELLED = "cancelled"
 
 class CustomerSchema(BaseModel):
     fullName: str = Field(..., min_length=1, max_length=100)
@@ -34,7 +43,7 @@ class OrderDocument(BaseModel):
     subtotal: int
     shipping: int
     total: int
-    status: str = "pending"
+    status: OrderStatus = OrderStatus.PENDING
     idempotencyKey: Optional[str] = None
     createdAt: datetime = Field(default_factory=datetime.utcnow)
     updatedAt: datetime = Field(default_factory=datetime.utcnow)
@@ -47,7 +56,7 @@ class PublicCustomerSnapshot(BaseModel):
 
 class OrderTrackingResponse(BaseModel):
     orderId: str
-    status: str
+    status: OrderStatus
     customer: PublicCustomerSnapshot
     items: List[OrderItemSnapshot]
     subtotal: int
