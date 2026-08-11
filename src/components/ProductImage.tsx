@@ -28,6 +28,9 @@ export function ProductImage({ productId, product, variant = 'card', className =
 
   const isAvailable = imageConfig.status === 'available' && Boolean(imageConfig.primary);
 
+  // Performance attributes per variant
+  const isEager = variant === 'hero' || variant === 'detail';
+
   return (
     <div
       className={`relative flex items-center justify-center overflow-hidden ${className}`}
@@ -38,7 +41,9 @@ export function ProductImage({ productId, product, variant = 'card', className =
         <img
           src={imageConfig.primary}
           alt={imageConfig.alt}
-          loading="lazy"
+          loading={isEager ? 'eager' : 'lazy'}
+          decoding={isEager ? 'sync' : 'async'}
+          {...(isEager ? { fetchPriority: 'high' } : {})}
           className="w-full h-full object-contain p-2"
         />
       ) : (
