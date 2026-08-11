@@ -9,21 +9,21 @@ export interface ProductFamilyImageConfig {
 
 // Deterministic family-level mapping registry indexed by ProductFamily.id
 const PRODUCT_FAMILY_IMAGE_REGISTRY: Record<string, Omit<ProductFamilyImageConfig, 'productId' | 'alt' | 'status'>> = {
-  'moong-master': { primary: '/images/products/moong-master.png', status: 'pending' },
-  'moong-garlic': { primary: '/images/products/moong-garlic.png', status: 'pending' },
-  'moong-jeera': { primary: '/images/products/moong-jeera.png', status: 'pending' },
-  'moong-pudhina': { primary: '/images/products/moong-pudhina.png', status: 'pending' },
-  'moong-green-chilli': { primary: '/images/products/moong-green-chilli.png', status: 'pending' },
-  'moong-kasuri-methi': { primary: '/images/products/moong-kasuri-methi.png', status: 'pending' },
-  'moong-punjabi-masala': { primary: '/images/products/moong-punjabi-masala.png', status: 'pending' },
-  'chana-chotu': { primary: '/images/products/chana-chotu.png', status: 'pending' },
-  'chana-garlic': { primary: '/images/products/chana-garlic.png', status: 'pending' },
-  'chana-khata-mitha': { primary: '/images/products/chana-khata-mitha.png', status: 'pending' },
-  'chana-tomato': { primary: '/images/products/chana-tomato.png', status: 'pending' },
-  'chana-punjabi-masala': { primary: '/images/products/chana-punjabi-masala.png', status: 'pending' },
-  'urad-guru': { primary: '/images/products/urad-guru.png', status: 'pending' },
-  'urad-garlic': { primary: '/images/products/urad-garlic.png', status: 'pending' },
-  'combo-235': { primary: '/images/products/combo-235.png', status: 'pending' },
+  'moong-master': { primary: '/images/products/moong-master.png', status: 'available' },
+  'moong-garlic': { primary: '/images/products/moong-garlic.png', status: 'available' },
+  'moong-jeera': { primary: '/images/products/moong-jeera.png', status: 'available' },
+  'moong-pudhina': { primary: '/images/products/moong-pudhina.png', status: 'available' },
+  'moong-green-chilli': { primary: '/images/products/moong-green-chilli.png', status: 'available' },
+  'moong-kasuri-methi': { primary: '/images/products/moong-kasuri-methi.png', status: 'available' },
+  'moong-punjabi-masala': { primary: '/images/products/moong-punjabi-masala.png', status: 'available' },
+  'chana-chotu': { primary: '/images/products/chana-chotu.png', status: 'available' },
+  'chana-garlic': { primary: '/images/products/chana-garlic.png', status: 'available' },
+  'chana-khata-mitha': { primary: '/images/products/chana-khata-mitha.png', status: 'available' },
+  'chana-tomato': { primary: '/images/products/chana-tomato.png', status: 'available' },
+  'chana-punjabi-masala': { primary: '/images/products/chana-punjabi-masala.png', status: 'available' },
+  'urad-guru': { primary: '/images/products/urad-guru.png', status: 'available' },
+  'urad-garlic': { primary: '/images/products/urad-garlic.png', status: 'available' },
+  'combo-235': { primary: '/images/products/combo-235.png', status: 'available' },
 };
 
 export function getProductFamilyImage(productId: string): ProductFamilyImageConfig {
@@ -36,7 +36,7 @@ export function getProductFamilyImage(productId: string): ProductFamilyImageConf
       productId,
       primary: '',
       alt: altText,
-      status: 'pending',
+      status: 'available',
     };
   }
 
