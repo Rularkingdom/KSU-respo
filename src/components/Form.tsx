@@ -125,7 +125,17 @@ export function useFormState<T extends { [K in keyof T]: string }>(initial: T) {
   return { values, errors, status, setValue, validate, setStatus, reset };
 }
 
-export function FormStatusMessage({ status, successMsg }: { status: FormStatus; successMsg: string }) {
+export interface FormStatusMessageProps {
+  status: FormStatus;
+  successMsg?: string;
+  errorMsg?: string;
+}
+
+export function FormStatusMessage({
+  status,
+  successMsg = 'Submitted successfully!',
+  errorMsg = 'Something went wrong. Please try again or contact us directly.',
+}: FormStatusMessageProps) {
   if (status === 'success') {
     return (
       <div className="flex items-center gap-2 p-3 rounded-xl bg-green-50 text-green-700 text-sm animate-scale-in" role="status">
@@ -138,7 +148,7 @@ export function FormStatusMessage({ status, successMsg }: { status: FormStatus; 
     return (
       <div className="flex items-center gap-2 p-3 rounded-xl bg-red-50 text-brand-red text-sm animate-scale-in" role="alert">
         <AlertCircle className="w-5 h-5 shrink-0" />
-        Something went wrong. Please try again or contact us directly.
+        {errorMsg}
       </div>
     );
   }
