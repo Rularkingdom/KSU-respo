@@ -8,12 +8,6 @@ import { ProductService } from '../services/product-service';
 import { PACK_LABELS } from '../data/products';
 import { useCart } from '../context/CartContext';
 
-const brand = {
-  fssai: '21425890001224',
-  dietType: '100% Vegetarian',
-  manufacturer: 'Kawad Swad Udhyog',
-};
-
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { addItem } = useCart();
