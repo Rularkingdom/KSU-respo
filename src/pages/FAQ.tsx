@@ -17,7 +17,7 @@ const faqSections: { title: string; items: FAQItem[] }[] = [
     items: [
       { q: 'What types of papad does Kawad Swad offer?', a: 'We offer moong, chana and urad papad in multiple flavours — including classic, garlic, jeera, pudhina, green chilli, kasuri methi, Punjabi masala, khata mitha and tomato. We also offer a combo pack.' },
       { q: 'What pack sizes are available?', a: 'Most products are available in 200g, 500g and 1kg packs. The combo pack comes in a 235g size.' },
-      { q: 'Are all products 100% vegetarian?', a: 'Yes. All our papads are 100% vegetarian and made following Jain food philosophy — no onion or garlic.' },
+      { q: 'Are all products 100% vegetarian?', a: 'Yes. All our papads are 100% vegetarian, crafted with authentic regional spices and quality lentils.' },
       { q: 'What is the FSSAI licence number?', a: `Our FSSAI licence number is ${brand.fssai}.` },
       { q: 'Where are the papads manufactured?', a: `Our papads are manufactured by ${brand.manufacturer} in ${brand.region}.` },
     ],
@@ -75,7 +75,7 @@ export default function FAQ() {
                     const id = `${si}-${ii}`;
                     const isOpen = openId === id;
                     return (
-                      <div key={id} className="card overflow-hidden">
+                      <div key={id} className="card overflow-hidden bg-white border border-brand-brown/5 shadow-soft">
                         <button
                           onClick={() => setOpenId(isOpen ? null : id)}
                           className="w-full flex items-center justify-between gap-4 p-5 text-left"
@@ -85,7 +85,7 @@ export default function FAQ() {
                           <ChevronDown className={`w-5 h-5 text-brand-brown/40 shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                         </button>
                         {isOpen && (
-                          <div className="px-5 pb-5 text-sm text-brand-brown/65 leading-relaxed animate-slide-down">
+                          <div className="px-5 pb-5 text-sm text-brand-brown/70 leading-relaxed animate-slide-down border-t border-brand-brown/5 pt-3">
                             {item.a}
                           </div>
                         )}
@@ -98,8 +98,8 @@ export default function FAQ() {
           ))}
 
           <Reveal>
-            <div className="card p-6 text-center bg-brand-cream-dark">
-              <p className="text-brand-brown/60 mb-4">Still have questions? We are here to help.</p>
+            <div className="card p-8 text-center bg-brand-cream-dark border border-brand-brown/5">
+              <p className="text-brand-brown/70 mb-4">Still have questions? We are here to help.</p>
               <Link to="/contact" className="btn-primary">Contact Us</Link>
             </div>
           </Reveal>
