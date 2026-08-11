@@ -19,7 +19,7 @@ export default function Shop() {
   const [searchParams] = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
 
-  const [search, setSearch] = useState(initialQuery);
+  const [search] = useState(initialQuery);
   const [category, setCategory] = useState<ProductCategory | 'all'>('all');
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'name'>('default');
   const [maxPrice, setMaxPrice] = useState(700);
@@ -146,7 +146,7 @@ export default function Shop() {
             {filtered.length === 0 ? (
               <div className="py-20 text-center border-2 border-dashed border-brand-brown/10 rounded-2xl">
                 <p className="text-brand-brown/60">No products match your filters.</p>
-                <button onClick={() => { setCategory('all'); setSearch(''); setMaxPrice(700); }} className="text-brand-red mt-2 font-medium hover:underline">Clear all</button>
+                <button onClick={() => { setCategory('all'); setMaxPrice(700); }} className="text-brand-red mt-2 font-medium hover:underline">Clear all</button>
               </div>
             ) : (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
