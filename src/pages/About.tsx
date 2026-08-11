@@ -10,7 +10,7 @@ export default function About() {
     <>
       <SEO
         title="About Us"
-        description="Kawad Swad is a premium Jain papad brand from Nimar, Madhya Pradesh, crafting authentic papads with traditional taste and modern manufacturing standards."
+        description="Kawad Swad is a premium papad brand from Nimar, Madhya Pradesh, crafting authentic papads with traditional taste and modern manufacturing standards."
         path="/about"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -52,7 +52,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* Jain Philosophy */}
+      {/* Heritage & Craft */}
       <section className="bg-brand-cream-dark py-16">
         <div className="container-max container-px">
           <Reveal>
@@ -60,21 +60,21 @@ export default function About() {
               <div className="w-14 h-14 rounded-2xl bg-brand-red/5 flex items-center justify-center mx-auto mb-5">
                 <Leaf className="w-7 h-7 text-brand-red" />
               </div>
-              <p className="section-eyebrow mb-3">Jain Food Philosophy</p>
+              <p className="section-eyebrow mb-3">Traditional Craftsmanship</p>
               <h2 className="text-3xl lg:text-4xl font-serif font-bold text-brand-brown mb-4 text-balance">
-                Rooted in ahimsa, made with care.
+                Rooted in heritage, made with care.
               </h2>
               <p className="text-base text-brand-brown/70 leading-relaxed text-pretty">
-                Jain food philosophy is built on the principle of non-violence. Our papads are 100% vegetarian, prepared without onion or garlic, and made with ingredients that respect Jain dietary traditions. This makes them suitable not only for Jain households but for anyone seeking clean, vegetarian food.
+                Our papads are 100% vegetarian, prepared following authentic regional recipes and quality ingredients. We offer both traditional spiced varieties and special dietary options across our product range to suit different households.
               </p>
             </div>
           </Reveal>
 
           <div className="mt-12 grid sm:grid-cols-3 gap-6">
             {[
-              { icon: Leaf, title: '100% Vegetarian', desc: 'Strictly vegetarian, with no onion or garlic.' },
-              { icon: Shield, title: 'Jain-Friendly', desc: 'Made following Jain dietary principles.' },
-              { icon: Heart, title: 'Made with Care', desc: 'Every batch prepared with attention to quality.' },
+              { icon: Leaf, title: '100% Vegetarian', desc: 'Strictly vegetarian selection with careful ingredient sourcing.' },
+              { icon: Shield, title: 'Traditional Flavours', desc: 'Authentic Nimar recipes and spice blends.' },
+              { icon: Heart, title: 'Made with Care', desc: 'Every batch prepared with attention to quality and crispness.' },
             ].map((item, i) => (
               <Reveal key={i} delay={i * 80}>
                 <div className="card p-6 text-center">
@@ -148,7 +148,7 @@ export default function About() {
 
       <CTABanner
         title="Taste the tradition."
-        description="Explore our full range of premium Jain papads, crafted in Nimar with care."
+        description="Explore our full range of premium papads, crafted in Nimar with care."
         primaryLabel="Shop Papads"
         primaryLink="/shop"
         secondaryLabel="Contact Us"
