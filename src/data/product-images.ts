@@ -7,44 +7,48 @@ export interface ProductFamilyImageConfig {
   status: 'available' | 'pending';
 }
 
-// Deterministic family-level mapping registry indexed by ProductFamily.id
-const PRODUCT_FAMILY_IMAGE_REGISTRY: Record<string, Omit<ProductFamilyImageConfig, 'productId' | 'alt' | 'status'>> = {
-  'moong-master': { primary: '/images/products/moong-master.png', status: 'available' },
-  'moong-garlic': { primary: '/images/products/moong-garlic.png', status: 'available' },
-  'moong-jeera': { primary: '/images/products/moong-jeera.png', status: 'available' },
-  'moong-pudhina': { primary: '/images/products/moong-pudhina.png', status: 'available' },
-  'moong-green-chilli': { primary: '/images/products/moong-green-chilli.png', status: 'available' },
-  'moong-kasuri-methi': { primary: '/images/products/moong-kasuri-methi.png', status: 'available' },
-  'moong-punjabi-masala': { primary: '/images/products/moong-punjabi-masala.png', status: 'available' },
-  'chana-chotu': { primary: '/images/products/chana-chotu.png', status: 'available' },
-  'chana-garlic': { primary: '/images/products/chana-garlic.png', status: 'available' },
-  'chana-khata-mitha': { primary: '/images/products/chana-khata-mitha.png', status: 'available' },
-  'chana-tomato': { primary: '/images/products/chana-tomato.png', status: 'available' },
-  'chana-punjabi-masala': { primary: '/images/products/chana-punjabi-masala.png', status: 'available' },
-  'urad-guru': { primary: '/images/products/urad-guru.png', status: 'available' },
-  'urad-garlic': { primary: '/images/products/urad-garlic.png', status: 'available' },
-  'combo-235': { primary: '/images/products/combo-235.png', status: 'available' },
+// Explicit status overrides or custom overrides for product families.
+// Newly added product families will automatically fall back to standard conventions.
+const PRODUCT_FAMILY_IMAGE_REGISTRY: Record<string, { status: 'available' | 'pending' }> = {
+  'moong-master': { status: 'available' },
+  'moong-garlic': { status: 'available' },
+  'moong-jeera': { status: 'available' },
+  'moong-pudhina': { status: 'available' },
+  'moong-green-chilli': { status: 'available' },
+  'moong-kasuri-methi': { status: 'available' },
+  'moong-punjabi-masala': { status: 'available' },
+  'chana-chotu': { status: 'available' },
+  'chana-garlic': { status: 'available' },
+  'chana-khata-mitha': { status: 'available' },
+  'chana-tomato': { status: 'available' },
+  'chana-punjabi-masala': { status: 'available' },
+  'urad-guru': { status: 'available' },
+  'urad-garlic': { status: 'available' },
+  'combo-235': { status: 'available' },
 };
 
 export function getProductFamilyImage(productId: string): ProductFamilyImageConfig {
   const product = ProductService.getAllProducts().find((p) => p.id === productId);
   const altText = product ? product.name : `Product ${productId}`;
-  const config = PRODUCT_FAMILY_IMAGE_REGISTRY[productId];
 
-  if (!config) {
+  // Controlled fallback for unknown or unmapped product IDs: strictly return 'pending' and empty primary path.
+  if (!product) {
     return {
       productId,
       primary: '',
       alt: altText,
-      status: 'available',
+      status: 'pending',
     };
   }
 
+  const registryEntry = PRODUCT_FAMILY_IMAGE_REGISTRY[productId];
+  const status = registryEntry ? registryEntry.status : 'pending';
+
   return {
     productId,
-    primary: config.primary,
+    primary: `/images/products/${productId}.png`,
     alt: altText,
-    status: config.status,
+    status,
   };
 }
 
@@ -61,13 +65,12 @@ export function getAllProductFamilyImageStats() {
   allProducts.forEach((p) => {
     if (!PRODUCT_FAMILY_IMAGE_REGISTRY[p.id]) {
       missingMappingCount++;
+    }
+    const img = getProductFamilyImage(p.id);
+    if (img.status === 'available') {
+      availableCount++;
     } else {
-      const img = getProductFamilyImage(p.id);
-      if (img.status === 'available') {
-        availableCount++;
-      } else {
-        pendingCount++;
-      }
+      pendingCount++;
     }
   });
 
