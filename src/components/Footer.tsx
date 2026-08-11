@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, Instagram, Youtube, MessageCircle, MapPin, Send } from 'lucide-react';
 import { brand, footerLinks } from '@/data/brand';
+import { Logo } from '@/components/Logo';
 
 export function Footer() {
   const [email, setEmail] = useState('');
@@ -59,15 +60,11 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <Link to="/" className="flex items-center gap-3 mb-4 inline-block">
-              <img
-                src="/logo.png"
-                alt="KAWAD SWAD"
-                className="h-12 w-auto object-contain"
-              />
-            </Link>
+            <div className="mb-4">
+              <Logo />
+            </div>
             <p className="text-sm text-brand-cream/70 mb-4 max-w-xs">
-              Premium Jain Papad from Nimar, Madhya Pradesh. {brand.tagline}
+              Premium Papad from Nimar, Madhya Pradesh. {brand.tagline}
             </p>
             <div className="flex gap-3">
               <a
