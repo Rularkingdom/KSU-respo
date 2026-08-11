@@ -97,7 +97,7 @@ export default function Business() {
               </h2>
               <ul className="space-y-4 mb-8">
                 {[
-                  'Authentic Jain papad with broad consumer appeal',
+                  'Authentic papad with broad consumer appeal',
                   'Consistent quality from modern manufacturing standards',
                   'Growing product range across moong, chana and urad varieties',
                   'Flexible supply chain for businesses of different sizes',
