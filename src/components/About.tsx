@@ -1,5 +1,4 @@
 import { SEO, breadcrumbSchema } from '@/components/SEO';
-import { SectionHeading } from '@/components/Section';
 import { Reveal } from '@/components/Reveal';
 import { brand } from '@/data/brand';
 import { ShieldCheck, Sparkles, Heart, Award } from 'lucide-react';
