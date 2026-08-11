@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Search, ShoppingBag, Sun } from 'lucide-react';
+import { Menu, X, Search, ShoppingBag } from 'lucide-react';
 import { brand, navLinks } from '@/data/brand';
 import { useCart } from '@/context/CartContext';
+import { Logo } from '@/components/Logo';
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -60,19 +61,7 @@ export function Header() {
         <div className="container-max container-px">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3 shrink-0" aria-label={`${brand.name} home`}>
-              <div className="w-10 h-10 rounded-full bg-brand-red flex items-center justify-center shadow-sm">
-                <span className="text-white font-serif font-bold text-lg">क</span>
-              </div>
-              <div className="leading-tight">
-                <div className="font-serif font-bold text-brand-brown text-xl tracking-tight">
-                  KAWAD SWAD
-                </div>
-                <div className="font-devanagari text-[10px] text-brand-brown/60 tracking-wider">
-                  कवाड़ स्वाद
-                </div>
-              </div>
-            </Link>
+            <Logo />
 
             {/* Desktop nav */}
             <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
@@ -157,28 +146,30 @@ export function Header() {
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-brand-brown/20 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <nav className="absolute right-0 top-0 bottom-0 w-80 bg-brand-cream shadow-lift p-6 animate-fade-in">
-            <div className="flex items-center justify-between mb-8">
-              <span className="font-serif font-bold text-lg">Menu</span>
-              <button onClick={() => setMobileOpen(false)} className="p-2 rounded-full hover:bg-brand-brown/5">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="space-y-2">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.path}
-                  to={link.path}
-                  className="block px-4 py-3 rounded-lg text-lg font-medium text-brand-brown hover:bg-brand-brown/5 transition-colors"
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-              <div className="pt-6">
-                <Link to="/shop" className="btn-primary w-full justify-center">
-                  Shop Papads
-                </Link>
+          <nav className="absolute right-0 top-0 bottom-0 w-80 bg-brand-cream shadow-lift p-6 animate-fade-in flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-8 pb-4 border-b border-brand-brown/10">
+                <Logo />
+                <button onClick={() => setMobileOpen(false)} className="p-2 rounded-full hover:bg-brand-brown/5">
+                  <X className="w-6 h-6" />
+                </button>
               </div>
+              <div className="space-y-2">
+                {navLinks.map((link) => (
+                  <NavLink
+                    key={link.path}
+                    to={link.path}
+                    className="block px-4 py-3 rounded-lg text-lg font-medium text-brand-brown hover:bg-brand-brown/5 transition-colors"
+                  >
+                    {link.label}
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+            <div className="pt-6 border-t border-brand-brown/10">
+              <Link to="/shop" className="btn-primary w-full justify-center">
+                Shop Papads
+              </Link>
             </div>
           </nav>
         </div>
