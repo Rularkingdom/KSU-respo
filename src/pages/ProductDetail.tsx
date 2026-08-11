@@ -1,16 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import {
-  ArrowLeft,
-  Minus,
-  Plus,
-  ShoppingBag,
-  Check,
-  Truck,
-  Shield,
-  Leaf,
-  ChevronRight,
-} from 'lucide-react';
+import { ArrowLeft, Minus, Plus, ShoppingBag, Check, Truck, Shield, Leaf, ChevronRight, Zap } from 'lucide-react';
 import { SEO, breadcrumbSchema } from '../components/SEO';
 import { ProductCard } from '../components/ProductCard';
 import { Reveal } from '../components/Reveal';
@@ -44,29 +34,20 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="container-max container-px py-20 text-center">
-        <SEO title="Product Not Found" description="The product you are looking for could not be found." path="/product/not-found" />
+        <SEO title="Product Not Found" description="Product not found" path="/product/not-found" />
         <h1 className="text-3xl font-serif font-bold text-brand-brown mb-4">Product not found</h1>
-        <Link to="/products" className="btn-primary">
-          Browse All Products
-        </Link>
+        <Link to="/products" className="btn-primary">Browse All</Link>
       </div>
     );
   }
 
   const selectedSku = product.skus[selectedSkuIndex] || product.skus[0];
-  const discount = Math.round(
-    ((selectedSku.mrp - selectedSku.websitePrice) / selectedSku.mrp) * 100
-  );
+  const discount = Math.round(((selectedSku.mrp - selectedSku.websitePrice) / selectedSku.mrp) * 100);
 
   const handleAddToCart = () => {
     addItem(selectedSku.sku, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
-  };
-
-  const handleBuyNow = () => {
-    addItem(selectedSku.sku, quantity);
-    navigate('/checkout');
   };
 
   return (
@@ -77,241 +58,90 @@ export default function ProductDetail() {
         path={`/product/${product.slug}`}
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
-          { name: 'Products', path: '/products' },
+          { name: 'Shop', path: '/shop' },
           { name: product.name, path: `/product/${product.slug}` },
         ])}
       />
 
-      {/* Breadcrumb */}
-      <div className="container-max container-px pt-6">
-        <nav className="flex items-center gap-1.5 text-xs text-brand-brown/50" aria-label="Breadcrumb">
-          <Link to="/" className="hover:text-brand-red">Home</Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to="/products" className="hover:text-brand-red">Products</Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-brand-brown">{product.name}</span>
-        </nav>
-      </div>
-
-      {/* Above fold */}
-      <section className="container-max container-px py-8">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Visual Placeholder */}
-          <div className="relative">
-            <div className="relative aspect-square card overflow-hidden rounded-4xl shadow-card bg-amber-50/40 flex items-center justify-center p-8 border border-amber-100">
-              <div className="absolute top-4 left-4 flex gap-2">
-                <span className="bg-[#FBEC0A] text-[#4E342E] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                  {PACK_LABELS[selectedSku.packSize] || `${selectedSku.packSize}g`}
-                </span>
-                <span className="bg-white/80 text-gray-700 text-xs font-mono px-2.5 py-1 rounded-md border border-amber-200">
-                  {selectedSku.sku}
-                </span>
+      <div className="container-max container-px py-12">
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          {/* Visual Presentation */}
+          <div className="sticky top-28">
+            <div className="aspect-square rounded-4xl bg-brand-cream-dark flex items-center justify-center p-12 border border-brand-brown/5 shadow-soft">
+              <div className="text-center">
+                <span className="text-sm font-semibold tracking-[0.2em] text-brand-red uppercase mb-4 block">Kawad Swad</span>
+                <h1 className="font-serif text-5xl text-brand-brown font-bold">{product.name}</h1>
+                <p className="mt-4 text-brand-brown/50 uppercase tracking-widest text-xs">{selectedSku.sku}</p>
               </div>
-              <div className="w-64 h-64 rounded-full border-8 border-dashed border-[#FE330E]/30 flex items-center justify-center bg-white shadow-inner">
-                <div className="text-center p-4">
-                  <span className="text-xs font-bold text-[#FE330E] tracking-widest block">KAWAD SWAD</span>
-                  <span className="font-serif font-bold text-[#4E342E] text-base block mt-1">{product.name}</span>
-                  <span className="text-[10px] text-gray-400 block mt-1">NIMAR, MADHYA PRADESH</span>
+            </div>
+          </div>
+
+          {/* Buying Experience */}
+          <div>
+            <div className="mb-6">
+              <span className="text-brand-red font-semibold uppercase tracking-widest text-xs">{product.category}</span>
+              <h1 className="text-4xl font-serif font-bold text-brand-brown mt-2">{product.name}</h1>
+              <p className="mt-4 text-brand-brown/70 leading-relaxed text-lg">{product.description}</p>
+            </div>
+
+            <div className="py-8 border-y border-brand-brown/10">
+              <div className="mb-6">
+                <label className="text-sm font-bold uppercase tracking-widest text-brand-brown mb-3 block">Pack Size</label>
+                <div className="flex gap-2">
+                  {product.skus.map((s, i) => (
+                    <button
+                      key={s.sku}
+                      onClick={() => setSelectedSkuIndex(i)}
+                      className={`px-6 py-3 rounded-full text-sm font-medium border transition-all ${
+                        selectedSkuIndex === i ? 'bg-brand-brown text-white border-brand-brown' : 'bg-white border-brand-brown/10 hover:border-brand-brown/30'
+                      }`}
+                    >
+                      {PACK_LABELS[s.packSize] || `${s.packSize}g`}
+                    </button>
+                  ))}
                 </div>
               </div>
-            </div>
-            {discount > 0 && (
-              <div className="absolute top-4 right-4">
-                <span className="badge-red text-sm px-3 py-1.5">{discount}% OFF</span>
-              </div>
-            )}
-          </div>
 
-          {/* Info */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="badge-brown">{product.category.toUpperCase()} FAMILY</span>
-            </div>
-
-            <h1 className="text-3xl lg:text-4xl font-serif font-bold text-brand-brown text-balance">
-              {product.name}
-            </h1>
-
-            <p className="mt-4 text-base text-brand-brown/70 leading-relaxed">{product.description}</p>
-
-            {/* Pack size selection */}
-            <div className="mt-6">
-              <p className="label-field">Select Pack Size / SKU</p>
-              <div className="flex flex-wrap gap-2">
-                {product.skus.map((s, i) => (
-                  <button
-                    key={s.sku}
-                    onClick={() => setSelectedSkuIndex(i)}
-                    className={`px-4 py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${
-                      selectedSkuIndex === i
-                        ? 'border-brand-red bg-brand-red/5 text-brand-red shadow-sm'
-                        : 'border-brand-brown/15 text-brand-brown hover:border-brand-brown/30 bg-white'
-                    }`}
-                  >
-                    {PACK_LABELS[s.packSize] || `${s.packSize}g`}
-                    <span className="block text-2xs font-mono opacity-60 mt-0.5">{s.sku}</span>
-                  </button>
-                ))}
+              <div className="flex items-end gap-4">
+                <span className="text-4xl font-bold text-brand-brown">₹{selectedSku.websitePrice}</span>
+                <span className="text-lg text-brand-brown/40 line-through">₹{selectedSku.mrp}</span>
+                {discount > 0 && <span className="badge-red mb-1.5">{discount}% OFF</span>}
               </div>
             </div>
 
-            {/* Price */}
-            <div className="mt-6 p-5 rounded-2xl bg-amber-50/50 border border-amber-100">
-              <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-bold text-brand-red">
-                  ₹{selectedSku.websitePrice}
-                </span>
-                <span className="text-lg text-brand-brown/40 line-through">
-                  ₹{selectedSku.mrp}
-                </span>
-                {discount > 0 && (
-                  <span className="badge-red">Save {discount}%</span>
-                )}
+            <div className="flex items-center gap-4 py-8">
+              <div className="flex items-center bg-white border border-brand-brown/10 rounded-full p-1">
+                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-3"><Minus className="w-4 h-4" /></button>
+                <span className="w-12 text-center font-bold">{quantity}</span>
+                <button onClick={() => setQuantity(q => q + 1)} className="p-3"><Plus className="w-4 h-4" /></button>
               </div>
-              <div className="mt-2 flex items-center gap-2 text-sm">
-                {selectedSku.freeShipping ? (
-                  <span className="text-emerald-600 font-medium flex items-center gap-1">
-                    <Truck className="w-4 h-4" /> Free Shipping Included
-                  </span>
-                ) : (
-                  <span className="text-brand-brown/60 flex items-center gap-1">
-                    <Truck className="w-4 h-4" /> Standard Shipping: ₹{selectedSku.shipping}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Quantity + Actions */}
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <div className="flex items-center border-2 border-brand-brown/15 rounded-xl overflow-hidden bg-white">
-                <button
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="p-3 hover:bg-brand-brown/5 transition-colors"
-                  aria-label="Decrease quantity"
-                >
-                  <Minus className="w-4 h-4" />
-                </button>
-                <span className="w-12 text-center font-semibold text-brand-brown">{quantity}</span>
-                <button
-                  onClick={() => setQuantity((q) => q + 1)}
-                  className="p-3 hover:bg-brand-brown/5 transition-colors"
-                  aria-label="Increase quantity"
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
-              </div>
-              <button
-                onClick={handleAddToCart}
-                className={`flex-1 py-3 px-6 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
-                  added ? 'bg-emerald-600 text-white' : 'border-2 border-brand-brown/20 text-brand-brown hover:bg-brand-brown/5'
-                }`}
-              >
-                {added ? (
-                  <>
-                    <Check className="w-5 h-5" /> Added to Cart
-                  </>
-                ) : (
-                  <>
-                    <ShoppingBag className="w-5 h-5" /> Add to Cart
-                  </>
-                )}
-              </button>
-              <button onClick={handleBuyNow} className="flex-1 bg-[#FE330E] text-white hover:bg-opacity-90 py-3 px-6 rounded-xl font-semibold text-sm transition-all shadow-sm">
-                Buy Now
+              <button onClick={handleAddToCart} className="flex-1 btn-primary py-4">
+                {added ? <Check className="w-5 h-5" /> : <ShoppingBag className="w-5 h-5" />}
+                {added ? 'Added' : 'Add to Cart'}
               </button>
             </div>
 
-            {/* Trust badges */}
-            <div className="mt-6 grid grid-cols-3 gap-3">
-              <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-white border border-amber-100">
-                <Leaf className="w-5 h-5 text-brand-red" />
-                <span className="text-2xs text-brand-brown/60 text-center font-medium">100% Vegetarian</span>
-              </div>
-              <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-white border border-amber-100">
-                <Shield className="w-5 h-5 text-brand-red" />
-                <span className="text-2xs text-brand-brown/60 text-center font-medium">FSSAI {brand.fssai}</span>
-              </div>
-              <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-white border border-amber-100">
-                <Truck className="w-5 h-5 text-brand-red" />
-                <span className="text-2xs text-brand-brown/60 text-center font-medium">Pan-India Shipping</span>
-              </div>
+            <div className="grid grid-cols-3 gap-4 py-6 border-t border-brand-brown/10">
+              {[ { icon: Leaf, label: 'Pure Veg' }, { icon: Shield, label: 'FSSAI Verified' }, { icon: Truck, label: 'Fast Delivery' } ].map((f, i) => (
+                <div key={i} className="text-center flex flex-col items-center gap-2">
+                  <f.icon className="w-6 h-6 text-brand-brown/30" />
+                  <span className="text-xs font-medium text-brand-brown/70">{f.label}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Details sections */}
-      <section className="container-max container-px py-12">
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="card p-6 bg-white border border-amber-100 rounded-2xl shadow-sm">
-            <h2 className="text-xl font-serif font-semibold text-brand-brown mb-3">Product Description</h2>
-            <p className="text-sm text-brand-brown/70 leading-relaxed">{product.description}</p>
-          </div>
-
-          <div className="card p-6 bg-white border border-amber-100 rounded-2xl shadow-sm">
-            <h2 className="text-xl font-serif font-semibold text-brand-brown mb-3">Storage & Shelf Life</h2>
-            <p className="text-sm text-brand-brown/70 leading-relaxed">
-              Store in a cool, dry place away from direct sunlight. Transfer to an airtight container once opened to maintain optimal crispness and flavor.
-            </p>
-          </div>
-
-          <div className="card p-6 bg-white border border-amber-100 rounded-2xl shadow-sm">
-            <h2 className="text-xl font-serif font-semibold text-brand-brown mb-3">Serving Suggestions</h2>
-            <p className="text-sm text-brand-brown/70 leading-relaxed">
-              Can be roasted over an open flame, deep-fried in cooking oil, or microwaved for a quick, oil-free crispy snack. Perfect accompaniment to Indian meals.
-            </p>
-          </div>
-
-          <div className="card p-6 bg-white border border-amber-100 rounded-2xl shadow-sm">
-            <h2 className="text-xl font-serif font-semibold text-brand-brown mb-3">Product Information</h2>
-            <dl className="space-y-2 text-sm">
-              <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                <dt className="text-brand-brown/60">Active SKU</dt>
-                <dd className="font-mono font-medium text-brand-brown">{selectedSku.sku}</dd>
-              </div>
-              <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                <dt className="text-brand-brown/60">Selected Pack Size</dt>
-                <dd className="font-medium text-brand-brown">{PACK_LABELS[selectedSku.packSize] || `${selectedSku.packSize}g`}</dd>
-              </div>
-              <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                <dt className="text-brand-brown/60">Diet Type</dt>
-                <dd className="font-medium text-brand-brown">{brand.dietType}</dd>
-              </div>
-              <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                <dt className="text-brand-brown/60">FSSAI License</dt>
-                <dd className="font-medium text-brand-brown">{brand.fssai}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-brand-brown/60">Manufacturer</dt>
-                <dd className="font-medium text-brand-brown">{brand.manufacturer}</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-      </section>
-
-      {/* Related products */}
-      {relatedProducts.length > 0 && (
-        <section className="container-max container-px py-12">
-          <Reveal>
-            <h2 className="text-2xl lg:text-3xl font-serif font-bold text-brand-brown mb-8">You may also like</h2>
-          </Reveal>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            {relatedProducts.map((p, i) => (
-              <Reveal key={p.id} delay={i * 60}>
-                <ProductCard product={p} />
-              </Reveal>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <div className="container-max container-px pb-8">
-        <Link to="/products" className="inline-flex items-center gap-2 text-sm font-medium text-brand-brown hover:text-brand-red transition-colors">
-          <ArrowLeft className="w-4 h-4" />
-          Back to Products
-        </Link>
       </div>
+      
+      {/* Related Products */}
+      <section className="bg-brand-cream-dark py-20">
+        <div className="container-max container-px">
+          <h2 className="text-3xl font-serif font-bold text-brand-brown mb-12 text-center">More from {product.category}</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {relatedProducts.map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
+        </div>
+      </section>
     </>
   );
 }
