@@ -68,7 +68,7 @@ BACKEND_PRODUCTS = [
         "variant": "Kasuri Methi",
         "skus": [
             {"sku": "KS-MKMP-200", "packSize": 200, "mrp": 109, "websitePrice": 89, "shipping": 49, "freeShipping": False},
-            {"sku": "KS-MKMP-500", "packSize": 500, "mrp": 229, "websitePrice": 198, "shipping": 49, "freeShipping": False},
+            {"sku": "KS-MKMP-500", "packSize": 500, "mrp": 229, "websitePrice": 49, "shipping": 189, "freeShipping": False},
             {"sku": "KS-MKMP-1000", "packSize": 1000, "mrp": 559, "websitePrice": 489, "shipping": 0, "freeShipping": True},
         ]
     },
@@ -175,7 +175,7 @@ BACKEND_PRODUCTS = [
         "category": "combo",
         "variant": "Assorted",
         "skus": [
-            {"sku": "KS-COMB-235", "packSize": 235, "mrp": 199, "websitePrice": 199, "shipping": 49, "freeShipping": False},
+            {"sku": "KS-COMB-235", "packSize": 235, "mrp": 199, "websitePrice": 189, "shipping": 49, "freeShipping": False},
         ]
     }
 ]
