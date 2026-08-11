@@ -5,7 +5,6 @@ import { Footer } from '@/components/Footer';
 import { ScrollToTop, WhatsAppButton } from '@/components/Floating';
 import { CartProvider } from '@/context/CartContext';
 import { OrderProvider } from '@/context/OrderContext';
-import { brand } from '@/data/brand';
 
 // Lazy load pages for code splitting
 const Home = lazy(() => import('@/pages/Home'));
