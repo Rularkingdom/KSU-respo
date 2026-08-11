@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShoppingBag, ArrowRight, Leaf, Shield, Award } from 'lucide-react';
+import { ArrowRight, Leaf, Shield, Award } from 'lucide-react';
 import { SEO, organizationSchema } from '../components/SEO';
 import { ProductCard } from '../components/ProductCard';
 import { ProductImage } from '../components/ProductImage';
