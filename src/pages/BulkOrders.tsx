@@ -42,7 +42,7 @@ export default function BulkOrders() {
     <>
       <SEO
         title="Bulk Orders"
-        description="Request bulk supply of Kawad Swad premium Jain papads for your business, event or institution. Tell us your requirements and we will get back to you."
+        description="Request bulk supply of Kawad Swad premium papads from Nimar for your business, event or institution. Tell us your requirements and we will get back to you."
         path="/bulk-orders"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -54,7 +54,7 @@ export default function BulkOrders() {
       <PageHero
         eyebrow="B2B"
         title="Bulk Orders"
-        description="Large-quantity supply of premium Jain papads for businesses, events and institutions. Tell us what you need and we will prepare a supply plan for you."
+        description="Large-quantity supply of premium papads from Nimar for businesses, events and institutions. Tell us what you need and we will prepare a supply plan for you."
       />
 
       <section className="container-max container-px py-12 lg:py-16">
