@@ -60,7 +60,7 @@ export interface CreateEnquiryPayload {
   type: EnquiryType;
   businessName?: string;
   contactPerson: string;
-  phone: string;
+  phone?: string;
   email: string;
   businessType?: string;
   location: string;
@@ -124,9 +124,9 @@ export const apiClient = {
       items: data.items.map((i) => ({
         sku: i.sku,
         quantity: i.quantity,
-        unitPrice: i.unitPrice,
-        productNameSnapshot: i.productNameSnapshot,
-        packSizeSnapshot: i.packSizeSnapshot,
+        unitPrice: i.unitPrice ?? 0,
+        productNameSnapshot: i.productNameSnapshot ?? '',
+        packSizeSnapshot: i.packSizeSnapshot ?? 0,
       })),
       subtotal: data.subtotal,
       totalShipping: data.shipping,
