@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Package, Clock, CheckCircle2, Truck, ShieldCheck, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Search, Package, Clock, CheckCircle2, ShieldCheck, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { SEO } from '../components/SEO';
 import { apiClient, TrackedOrder } from '../services/api-client';
@@ -43,8 +43,9 @@ export default function TrackOrder() {
     try {
       const result = await apiClient.trackOrder(orderIdInput, phoneInput);
       setOrderData(result);
-    } catch (err: any) {
-      setError(err?.message || 'Unable to retrieve order details. Please verify your details and try again.');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unable to retrieve order details. Please verify your details and try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -167,7 +168,7 @@ export default function TrackOrder() {
                   </h4>
                   <div className="grid grid-cols-5 gap-1 text-center">
                     {STATUS_STEPS.map((st, idx) => {
-                      const currentIdx = STATUS_STEPS.indexOf(orderData.status as any);
+                      const currentIdx = STATUS_STEPS.indexOf(orderData.status as typeof STATUS_STEPS[number]);
                       const isCompleted = currentIdx >= idx;
                       return (
                         <div key={st} className="flex flex-col items-center">
