@@ -14,22 +14,22 @@ const steps = [
   { 
     num: '02', 
     title: 'Dough Mixing & Shaping', 
-    desc: 'Flours and spice blends are precisely combined with water and natural leavening agents, kneaded to optimal consistency, and shaped into traditional papads following established recipes.' 
+    desc: 'Flours and spice blends are combined with water, kneaded to consistent texture, and shaped into traditional papads following established regional recipes.' 
   },
   { 
     num: '03', 
-    title: 'Controlled Drying', 
-    desc: 'Shaped papads undergo controlled sun-drying and air-seasoning environments to achieve ideal moisture levels, structural integrity, and long-lasting crispness.' 
+    title: 'Traditional Drying', 
+    desc: 'Shaped papads are dried under standard facility conditions to achieve appropriate moisture levels, structural integrity, and shelf stability.' 
   },
   { 
     num: '04', 
     title: 'Quality Inspection', 
-    desc: 'Every production lot is carefully reviewed for uniform thickness, texture consistency, surface perfection, and absence of physical defects before approval.' 
+    desc: 'Every production lot is reviewed for uniform thickness, texture consistency, and general appearance before final approval.' 
   },
   { 
     num: '05', 
-    title: 'Hygienic Packaging', 
-    desc: 'Finished papads are securely sealed in moisture-resistant, food-grade packaging to preserve authentic flavor and crunch from our Nimar facility to retail and commercial kitchens.' 
+    title: 'Sealed Packaging', 
+    desc: 'Finished papads are packed securely in food-grade packaging to preserve authentic flavor and crunch from our Nimar facility to your kitchen.' 
   },
 ];
 
@@ -86,14 +86,14 @@ export default function Manufacturing() {
                 Honoring tradition through structured execution.
               </h2>
               <p className="text-base lg:text-lg text-brand-cream/80 leading-relaxed text-pretty mb-10">
-                At Kawad Swad Udhyog, we believe that exceptional papad requires both respect for traditional culinary methods and strict adherence to modern operational hygiene. We invest in careful sourcing, controlled processing environments, and consistent batch testing.
+                At Kawad Swad Udhyog, we believe that exceptional papad requires respect for traditional culinary methods combined with structured operational hygiene and careful ingredient sourcing.
               </p>
               
               <div className="grid sm:grid-cols-3 gap-6 pt-6 border-t border-brand-cream/15">
                 {[
                   { icon: Leaf, title: 'Authentic Recipes', desc: 'Rooted in Nimar traditions' },
-                  { icon: Shield, title: 'FSSAI Compliant', desc: `Licence No. ${brand.fssai}` },
-                  { icon: Factory, title: 'Reliable Output', desc: 'Consistent commercial supply' },
+                  { icon: Shield, title: 'FSSAI Licence', desc: `Licence No. ${brand.fssai}` },
+                  { icon: Factory, title: 'Commercial Supply', desc: 'Consistent production capacity' },
                 ].map((item, idx) => (
                   <div key={idx} className="p-5 rounded-2xl bg-white/5 border border-white/10">
                     <item.icon className="w-6 h-6 text-brand-yellow mb-3" />
@@ -120,14 +120,14 @@ export default function Manufacturing() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            'FSSAI licensed food facility',
+            'FSSAI Licence No. 21425890001224',
             '100% vegetarian production line',
             'Dedicated dietary variant options',
-            'Moisture-barrier sealed packaging',
-            'Rigorous batch consistency checks',
-            'Natural spice blends without shortcuts',
+            'Sealed food-grade packaging',
+            'Regular batch quality reviews',
+            'Authentic regional spice blends',
             'Careful lentil flour sourcing',
-            'Traceable quality control steps',
+            'Standardized quality control steps',
           ].map((point, i) => (
             <Reveal key={i} delay={i * 40}>
               <div className="card p-6 bg-white border border-brand-brown/5 shadow-soft flex items-start gap-3 h-full">
