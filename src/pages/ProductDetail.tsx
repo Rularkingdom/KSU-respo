@@ -131,7 +131,7 @@ export default function ProductDetail() {
             </div>
 
             <div className="grid grid-cols-3 gap-4 py-6 border-t border-brand-brown/10">
-              {[ { icon: Leaf, label: 'Pure Veg' }, { icon: Shield, label: 'FSSAI Verified' }, { icon: Truck, label: 'Fast Delivery' } ].map((f, i) => (
+              {[ { icon: Leaf, label: 'Pure Veg' }, { icon: Shield, label: 'FSSAI Licence' }, { icon: Truck, label: 'Fast Delivery' } ].map((f, i) => (
                 <div key={i} className="text-center flex flex-col items-center gap-2">
                   <f.icon className="w-6 h-6 text-brand-brown/30" />
                   <span className="text-xs font-medium text-brand-brown/70">{f.label}</span>
