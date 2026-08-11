@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Minus, Plus, ShoppingBag, Check, Truck, Shield, Leaf, ChevronRight, Zap } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import { Minus, Plus, ShoppingBag, Check, Truck, Shield, Leaf } from 'lucide-react';
 import { SEO, breadcrumbSchema } from '../components/SEO';
 import { ProductCard } from '../components/ProductCard';
 import { ProductImage } from '../components/ProductImage';
-import { Reveal } from '../components/Reveal';
 import { ProductService } from '../services/product-service';
 import { PACK_LABELS } from '../data/products';
 import { useCart } from '../context/CartContext';
@@ -17,7 +16,6 @@ const brand = {
 
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
   const { addItem } = useCart();
   const product = slug ? ProductService.getProductBySlug(slug) : undefined;
 
@@ -135,7 +133,7 @@ export default function ProductDetail() {
                 <div key={i} className="text-center flex flex-col items-center gap-2">
                   <f.icon className="w-6 h-6 text-brand-brown/30" />
                   <span className="text-xs font-medium text-brand-brown/70">{f.label}</span>
-              </div>
+                </div>
               ))}
             </div>
           </div>
