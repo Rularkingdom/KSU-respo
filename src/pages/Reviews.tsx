@@ -30,8 +30,8 @@ export default function Reviews() {
   return (
     <>
       <SEO
-        title="Reviews"
-        description="Read and share reviews of Kawad Swad premium papads from Nimar. We are building a trusted review system with verified customer feedback."
+        title="Customer Reviews"
+        description="Read and share verified reviews of Kawad Swad premium papads from Nimar. Honest, authentic customer feedback."
         path="/reviews"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -40,69 +40,73 @@ export default function Reviews() {
       />
 
       <PageHero
-        eyebrow="Community"
-        title="Reviews"
-        description="We are building a community of Kawad Swad lovers. Verified customer reviews will appear here as they come in. You can also share your own experience below."
+        eyebrow="Community & Feedback"
+        title="Customer Reviews"
+        description="We believe in authentic, verified feedback. Customer reviews will appear here as orders are delivered and experiences are shared."
       />
 
-      {/* Reviews placeholder */}
-      <section className="container-max container-px py-12">
+      {/* Reviews Empty State */}
+      <section className="container-max container-px py-16 lg:py-24">
         <Reveal>
-          <div className="card max-w-2xl mx-auto p-8 lg:p-12 text-center">
-            <div className="flex justify-center gap-1 mb-4">
+          <div className="card max-w-2xl mx-auto p-10 lg:p-14 text-center bg-brand-cream-dark border border-brand-brown/10 shadow-soft">
+            <div className="flex justify-center gap-1.5 mb-6">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-7 h-7 text-brand-brown/15" />
+                <Star key={i} className="w-8 h-8 text-brand-brown/15" />
               ))}
             </div>
-            <h2 className="text-xl font-serif font-semibold text-brand-brown mb-2">
-              No reviews yet
+            <h2 className="text-2xl font-serif font-bold text-brand-brown mb-3">
+              No reviews published yet
             </h2>
-            <p className="text-sm text-brand-brown/60 leading-relaxed max-w-md mx-auto">
-              We believe in honest, verified feedback. Once customers receive and try our papads, their reviews will appear here. Be the first to share your experience.
+            <p className="text-sm lg:text-base text-brand-brown/70 leading-relaxed max-w-md mx-auto">
+              Verified customer reviews will appear here as they are collected. We do not use fabricated testimonials or placeholder reviews—every word here reflects real customer experiences.
             </p>
           </div>
         </Reveal>
       </section>
 
-      {/* Review form */}
-      <section className="bg-brand-cream-dark py-16">
+      {/* Review Form Section */}
+      <section className="bg-brand-cream-dark py-20 border-t border-brand-brown/5">
         <div className="container-max container-px">
           <div className="max-w-2xl mx-auto">
             <Reveal>
-              <div className="text-center mb-8">
-                <div className="w-12 h-12 rounded-2xl bg-brand-red/5 flex items-center justify-center mx-auto mb-4">
+              <div className="text-center mb-10">
+                <div className="w-14 h-14 rounded-2xl bg-brand-red/5 flex items-center justify-center mx-auto mb-4 border border-brand-brown/5">
                   <MessageSquare className="w-6 h-6 text-brand-red" />
                 </div>
                 <h2 className="text-3xl font-serif font-bold text-brand-brown">Share Your Experience</h2>
-                <p className="mt-2 text-brand-brown/60">Tell us what you think of Kawad Swad papads.</p>
+                <p className="mt-2 text-sm text-brand-brown/70">Tried Kawad Swad papads? Tell us about your experience.</p>
               </div>
             </Reveal>
+
             <Reveal delay={100}>
-              <div className="card p-6 sm:p-8">
+              <div className="card p-8 sm:p-10 bg-white border border-brand-brown/10 shadow-soft">
                 {form.status === 'success' && (
-                  <div className="mb-5">
-                    <FormStatusMessage status="success" successMsg="Thank you for your review. It will be published after verification." />
+                  <div className="mb-6">
+                    <FormStatusMessage status="success" successMsg="Thank you for your review. It will be reviewed for authenticity before publishing." />
                   </div>
                 )}
                 <form onSubmit={submit} noValidate>
                   <FormContainer>
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid sm:grid-cols-2 gap-6">
                       <FormField label="Your Name" name="name" value={form.values.name} onChange={(v) => form.setValue('name', v)} error={form.errors.name} required />
                       <FormField label="Email (optional)" name="email" type="email" value={form.values.email} onChange={(v) => form.setValue('email', v)} />
                     </div>
+
                     <div>
-                      <label htmlFor="rating" className="label-field">Rating <span className="text-brand-red">*</span></label>
-                      <div className="flex gap-2">
+                      <label id="rating-label" className="label-field block mb-2 font-medium text-brand-brown">
+                        Rating <span className="text-brand-red">*</span>
+                      </label>
+                      <div className="flex items-center gap-2" role="group" aria-labelledby="rating-label">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
                             key={star}
                             type="button"
                             onClick={() => form.setValue('rating', String(star))}
-                            className="p-1 transition-transform hover:scale-110"
+                            className="p-1.5 rounded-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-brand-red"
                             aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                           >
                             <Star
-                              className={`w-7 h-7 ${
+                              className={`w-7 h-7 transition-colors ${
                                 Number(form.values.rating) >= star
                                   ? 'fill-brand-yellow text-brand-yellow'
                                   : 'text-brand-brown/20'
@@ -112,14 +116,17 @@ export default function Reviews() {
                         ))}
                       </div>
                     </div>
-                    <FormField label="Product (optional)" name="product" value={form.values.product} onChange={(v) => form.setValue('product', v)} placeholder="Which papad did you try?" />
-                    <FormField label="Your Review" name="message" type="textarea" value={form.values.message} onChange={(v) => form.setValue('message', v)} error={form.errors.message} required rows={5} placeholder="Share your experience..." />
+
+                    <FormField label="Product (optional)" name="product" value={form.values.product} onChange={(v) => form.setValue('product', v)} placeholder="Which papad variety did you try?" />
+                    <FormField label="Your Review" name="message" type="textarea" value={form.values.message} onChange={(v) => form.setValue('message', v)} error={form.errors.message} required rows={5} placeholder="Share your experience regarding taste, texture, and crispness..." />
                   </FormContainer>
-                  <div className="mt-6">
+
+                  <div className="mt-8">
                     <SubmitButton status={form.status} label="Submit Review" />
                   </div>
-                  <p className="mt-3 text-2xs text-brand-brown/45 text-center">
-                    Reviews are verified before publishing to ensure authenticity.
+
+                  <p className="mt-4 text-xs text-brand-brown/50 text-center leading-relaxed">
+                    Reviews are verified to ensure authenticity before publication.
                   </p>
                 </form>
               </div>
