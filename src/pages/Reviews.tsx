@@ -3,7 +3,6 @@ import { PageHero } from '@/components/Section';
 import { Reveal, CTABanner } from '@/components/Reveal';
 import { FormField, FormStatusMessage, SubmitButton, useFormState, validators, simulateSubmit, FormContainer } from '@/components/Form';
 import { Star, MessageSquare } from 'lucide-react';
-import { brand } from '@/data/brand';
 
 export default function Reviews() {
   const form = useFormState({
