@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Leaf, Shield, Factory, Heart, ArrowRight, MapPin } from 'lucide-react';
+import { Leaf, Shield, Award, Sparkles, ArrowRight, MapPin, Factory } from 'lucide-react';
 import { SEO, breadcrumbSchema } from '@/components/SEO';
 import { PageHero, PlaceholderImage } from '@/components/Section';
 import { Reveal, CTABanner } from '@/components/Reveal';
@@ -10,7 +10,7 @@ export default function About() {
     <>
       <SEO
         title="About Us"
-        description="Kawad Swad is a premium papad brand from Nimar, Madhya Pradesh, crafting authentic papads with traditional taste and modern manufacturing standards."
+        description="Kawad Swad is a premium papad brand from Nimar, Madhya Pradesh, crafting authentic traditional papads with dependable quality standards."
         path="/about"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -18,71 +18,97 @@ export default function About() {
         ])}
       />
 
-      <PageHero
-        eyebrow="Our Story"
-        title="From Nimar, with tradition."
-        description="Kawad Swad brings the authentic taste of Nimar's papad-making tradition to homes across India — with the quality standards of a modern food brand."
-      />
-
-      {/* Story */}
-      <section className="container-max container-px py-16">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <Reveal>
-            <div>
-              <p className="section-eyebrow mb-3">The Region</p>
-              <h2 className="text-3xl lg:text-4xl font-serif font-bold text-brand-brown mb-4">
-                Nimar, Madhya Pradesh
-              </h2>
-              <div className="space-y-4 text-base text-brand-brown/70 leading-relaxed">
-                <p>
-                  Nimar is a region in Madhya Pradesh with a deep tradition of food craftsmanship. It is the home of Kawad Swad — a brand built on the belief that traditional taste deserves a modern platform.
-                </p>
-                <p>
-                  Our papads carry the flavour of this region: authentic, warm and unmistakably Indian. We work with local ingredients and time-honoured recipes to create papads that taste the way papad should.
-                </p>
-                <p className="font-devanagari text-brand-brown/80">
-                  {brand.tagline}
-                </p>
-              </div>
-            </div>
-          </Reveal>
-          <Reveal delay={150}>
-            <PlaceholderImage label="Nimar region — landscape placeholder" aspect="aspect-[4/3]" />
-          </Reveal>
+      {/* Editorial Hero */}
+      <section className="relative bg-brand-cream py-20 lg:py-28 overflow-hidden border-b border-brand-brown/5">
+        <div className="container-max container-px">
+          <div className="max-w-3xl">
+            <span className="section-eyebrow mb-4 block">Our Brand Story</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif font-bold text-brand-brown leading-[1.05] tracking-tight mb-6">
+              From Nimar, with <span className="text-brand-red">tradition.</span>
+            </h1>
+            <p className="text-lg lg:text-xl text-brand-brown/70 leading-relaxed font-normal text-pretty">
+              Kawad Swad brings the authentic taste of Nimar’s papad-making heritage to kitchens across India — uniting time-honored recipes with the reliability of modern food manufacturing.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Heritage & Craft */}
-      <section className="bg-brand-cream-dark py-16">
+      {/* Brand Introduction & Nimar Connection */}
+      <section className="container-max container-px py-20 lg:py-28">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="lg:col-span-6">
+            <Reveal>
+              <div>
+                <span className="section-eyebrow mb-3 block">The Region</span>
+                <h2 className="text-3xl lg:text-4xl font-serif font-bold text-brand-brown mb-6">
+                  Rooted in the fertile soil of Nimar, Madhya Pradesh.
+                </h2>
+                <div className="space-y-4 text-base text-brand-brown/70 leading-relaxed">
+                  <p>
+                    Nimar is a historical region renowned for its deep agricultural roots and rich culinary craftsmanship. It is the home of Kawad Swad — established by {brand.manufacturer} to give traditional Indian papads a dependable, professional platform.
+                  </p>
+                  <p>
+                    Our papads carry the distinct warmth and flavor of this region. We work with carefully selected local ingredients and authentic spice blends to produce papads that taste the way traditional papad should.
+                  </p>
+                  <blockquote className="p-4 bg-brand-cream-dark border-l-2 border-brand-red rounded-r-xl my-6 font-devanagari text-brand-brown/90 text-lg">
+                    {brand.tagline}
+                  </blockquote>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+          <div className="lg:col-span-6">
+            <Reveal delay={150}>
+              <div className="rounded-3xl overflow-hidden shadow-lift border border-brand-brown/10">
+                <PlaceholderImage label="Nimar region — landscape view" aspect="aspect-[4/3]" />
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Values (4 Meaningful Pillars instead of generic 10-card grids) */}
+      <section className="bg-brand-cream-dark py-20 border-y border-brand-brown/5">
         <div className="container-max container-px">
           <Reveal>
-            <div className="max-w-3xl mx-auto text-center">
-              <div className="w-14 h-14 rounded-2xl bg-brand-red/5 flex items-center justify-center mx-auto mb-5">
-                <Leaf className="w-7 h-7 text-brand-red" />
-              </div>
-              <p className="section-eyebrow mb-3">Traditional Craftsmanship</p>
-              <h2 className="text-3xl lg:text-4xl font-serif font-bold text-brand-brown mb-4 text-balance">
-                Rooted in heritage, made with care.
+            <div className="max-w-2xl mx-auto text-center mb-16">
+              <span className="section-eyebrow mb-3 block">What We Stand For</span>
+              <h2 className="text-3xl lg:text-4xl font-serif font-bold text-brand-brown text-balance">
+                Built on uncompromising principles.
               </h2>
-              <p className="text-base text-brand-brown/70 leading-relaxed text-pretty">
-                Our papads are 100% vegetarian, prepared following authentic regional recipes and quality ingredients. We offer both traditional spiced varieties and special dietary options across our product range to suit different households.
-              </p>
             </div>
           </Reveal>
 
-          <div className="mt-12 grid sm:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Leaf, title: '100% Vegetarian', desc: 'Strictly vegetarian selection with careful ingredient sourcing.' },
-              { icon: Shield, title: 'Traditional Flavours', desc: 'Authentic Nimar recipes and spice blends.' },
-              { icon: Heart, title: 'Made with Care', desc: 'Every batch prepared with attention to quality and crispness.' },
+              { 
+                icon: Leaf, 
+                title: 'Traditional Taste', 
+                desc: 'Authentic regional recipes and time-tested spice formulations that preserve genuine Indian flavors.' 
+              },
+              { 
+                icon: Shield, 
+                title: 'Consistent Quality', 
+                desc: 'Rigorous ingredient selection and structured manufacturing standards in every batch we produce.' 
+              },
+              { 
+                icon: Award, 
+                title: 'Food Craft', 
+                desc: 'Expertise in lentil processing, dough mixing, rolling, and sun-drying techniques.' 
+              },
+              { 
+                icon: Sparkles, 
+                title: 'Customer Trust', 
+                desc: 'Transparent business operations, dependable fulfillment, and clear labeling for retail and B2B partners.' 
+              },
             ].map((item, i) => (
               <Reveal key={i} delay={i * 80}>
-                <div className="card p-6 text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-brand-red/5 flex items-center justify-center mx-auto mb-4">
+                <div className="card p-8 bg-white border border-brand-brown/5 shadow-soft hover:shadow-lift transition-all h-full flex flex-col">
+                  <div className="w-12 h-12 rounded-2xl bg-brand-red/5 flex items-center justify-center mb-6">
                     <item.icon className="w-6 h-6 text-brand-red" />
                   </div>
-                  <h3 className="text-lg font-serif font-semibold text-brand-brown mb-2">{item.title}</h3>
-                  <p className="text-sm text-brand-brown/60">{item.desc}</p>
+                  <h3 className="text-lg font-serif font-semibold text-brand-brown mb-3">{item.title}</h3>
+                  <p className="text-sm text-brand-brown/65 leading-relaxed">{item.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -90,56 +116,69 @@ export default function About() {
         </div>
       </section>
 
-      {/* Quality & Manufacturing */}
-      <section className="container-max container-px py-16">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <Reveal>
-            <PlaceholderImage label="Quality & manufacturing placeholder" aspect="aspect-[4/3]" />
-          </Reveal>
-          <Reveal delay={150}>
-            <div>
-              <p className="section-eyebrow mb-3">Quality & Manufacturing</p>
-              <h2 className="text-3xl lg:text-4xl font-serif font-bold text-brand-brown mb-4">
-                Tradition meets modern standards.
-              </h2>
-              <div className="space-y-4 text-base text-brand-brown/70 leading-relaxed">
-                <p>
-                  We believe that traditional taste and modern quality are not opposites — they are partners. Our manufacturing follows hygienic practices and consistent quality standards, while our recipes stay true to their roots.
-                </p>
-                <p>
-                  From ingredient selection to final packaging, every step is designed to preserve the flavour, freshness and character that define a great papad.
-                </p>
+      {/* Heritage & Dietary Philosophy */}
+      <section className="container-max container-px py-20 lg:py-28">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="lg:col-span-6 order-2 lg:order-1">
+            <Reveal>
+              <div className="rounded-3xl overflow-hidden shadow-lift border border-brand-brown/10">
+                <PlaceholderImage label="Traditional preparation and heritage" aspect="aspect-[4/3]" />
               </div>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link to="/manufacturing" className="btn-secondary">
-                  See Our Manufacturing
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link to="/products" className="btn-outline">
-                  Explore Products
-                </Link>
+            </Reveal>
+          </div>
+          <div className="lg:col-span-6 order-1 lg:order-2">
+            <Reveal delay={150}>
+              <div>
+                <span className="section-eyebrow mb-3 block">Heritage & Dietary Choices</span>
+                <h2 className="text-3xl lg:text-4xl font-serif font-bold text-brand-brown mb-6">
+                  Honoring traditional culinary roots.
+                </h2>
+                <div className="space-y-4 text-base text-brand-brown/70 leading-relaxed">
+                  <p>
+                    Our brand heritage is deeply intertwined with traditional vegetarian culinary practices, including offerings tailored for Jain dietary preferences. We provide dedicated non-garlic options alongside our spiced variants.
+                  </p>
+                  <p>
+                    Because our product catalogue includes specific garlic-infused SKUs, we maintain clear, transparent labeling on every product so households and businesses can select exactly what matches their requirements.
+                  </p>
+                </div>
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
         </div>
       </section>
 
-      {/* Brand Vision */}
-      <section className="bg-brand-brown text-brand-cream py-16">
+      {/* Quality-Focused Approach & Manufacturer Details */}
+      <section className="bg-brand-brown text-brand-cream py-20">
         <div className="container-max container-px">
           <Reveal>
             <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-yellow mb-3">Our Vision</p>
-              <h2 className="text-3xl lg:text-4xl font-serif font-bold text-white mb-4 text-balance">
-                To bring the taste of Nimar to every Indian home.
+              <span className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-yellow mb-3 block">Manufacturer Credibility</span>
+              <h2 className="text-3xl lg:text-5xl font-serif font-bold text-white mb-6 leading-tight">
+                Crafted by Kawad Swad Udhyog.
               </h2>
-              <p className="text-base lg:text-lg text-brand-cream/70 leading-relaxed text-pretty">
-                We see a future where Kawad Swad is a trusted name in Indian kitchens — a brand that stands for authentic taste, clean ingredients and dependable quality. We are still early in this journey, and we are building it with honesty and care.
+              <p className="text-base lg:text-lg text-brand-cream/80 leading-relaxed mb-10">
+                Every packet of Kawad Swad papad reflects our dedication to proper hygiene, structured packaging, and dependable supply chains. We invite you to explore our production methods or get in touch for commercial partnerships.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4 text-sm text-brand-cream/60">
-                <span className="flex items-center gap-2"><Factory className="w-4 h-4 text-brand-yellow" /> {brand.manufacturer}</span>
-                <span className="flex items-center gap-2"><MapPin className="w-4 h-4 text-brand-yellow" /> {brand.region}</span>
-                <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-brand-yellow" /> FSSAI {brand.fssai}</span>
+              
+              <div className="flex flex-wrap gap-6 pt-6 border-t border-brand-cream/15 text-sm text-brand-cream/70">
+                <span className="flex items-center gap-2">
+                  <Factory className="w-4 h-4 text-brand-yellow" /> {brand.manufacturer}
+                </span>
+                <span className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-brand-yellow" /> {brand.region}
+                </span>
+                <span className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-brand-yellow" /> FSSAI Licence No. {brand.fssai}
+                </span>
+              </div>
+
+              <div className="mt-10 flex flex-wrap gap-4">
+                <Link to="/manufacturing" className="btn-yellow px-8 py-3">
+                  View Manufacturing Process <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+                <Link to="/bulk-orders" className="btn-outline border-brand-cream/30 text-brand-cream hover:bg-white/10 px-8 py-3">
+                  Explore Bulk Supply
+                </Link>
               </div>
             </div>
           </Reveal>
@@ -147,8 +186,8 @@ export default function About() {
       </section>
 
       <CTABanner
-        title="Taste the tradition."
-        description="Explore our full range of premium papads, crafted in Nimar with care."
+        title="Experience authentic Nimar taste."
+        description="Browse our complete selection of premium moong, chana, and urad papads."
         primaryLabel="Shop Papads"
         primaryLink="/shop"
         secondaryLabel="Contact Us"
