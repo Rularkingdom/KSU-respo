@@ -19,7 +19,12 @@ export default function Cart() {
 
   return (
     <>
-      <SEO title="Shopping Cart" description="Review your Kawad Swad papad order before checkout." path="/cart" />
+      <SEO 
+        title="Shopping Cart" 
+        description="Review your Kawad Swad papad order before checkout." 
+        path="/cart" 
+        indexable={false} 
+      />
       
       <div className="bg-brand-cream py-16">
         <div className="container-max container-px text-center">
