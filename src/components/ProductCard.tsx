@@ -37,6 +37,7 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
         {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-brand-cream-dark">
           <ProductImage
+            sku={defaultSku.sku}
             product={product}
             variant="card"
             className="w-full h-full transition-transform duration-500 group-hover:scale-105"
