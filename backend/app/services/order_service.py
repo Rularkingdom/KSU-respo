@@ -2,6 +2,7 @@ from fastapi import HTTPException
 import random
 import string
 from datetime import datetime
+from pymongo.errors import DuplicateKeyError # Import specific error
 from ..database import get_database
 from ..models.product import find_sku_in_backend
 from ..models.order import CreateOrderRequest, OrderDocument, OrderItemSnapshot, OrderTrackingResponse, PublicCustomerSnapshot
@@ -70,8 +71,16 @@ async def process_and_save_order(payload: CreateOrderRequest):
 
     doc_dict = order_doc.model_dump()
 
-    # 4. Save to MongoDB
-    await orders_collection.insert_one(doc_dict)
+    # 4. Save to MongoDB with duplicate key handling
+    try:
+        await orders_collection.insert_one(doc_dict)
+    except DuplicateKeyError:
+        # If insertion failed due to duplicate idempotencyKey, fetch the existing record
+        existing = await orders_collection.find_one({"idempotencyKey": payload.idempotencyKey})
+        if existing:
+            existing.pop("_id", None)
+            return existing
+        raise HTTPException(status_code=500, detail="Order could not be processed.")
     
     doc_dict.pop("_id", None)
     return doc_dict
