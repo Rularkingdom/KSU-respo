@@ -14,7 +14,6 @@ interface ProductCardProps {
 export function ProductCard({ product, className = '' }: ProductCardProps) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   const defaultSku = product.skus[0];
   const discount = Math.round(
@@ -29,28 +28,14 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -8;
-    setTilt({ x, y });
-  };
-
   return (
     <Link
       to={`/product/${product.slug}`}
-      className={`group block perspective-1000 ${className}`}
+      className={`group block ${className}`}
     >
-      <div
-        className="card overflow-hidden hover:shadow-lift hover:-translate-y-1 transition-all duration-300 preserve-3d"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-        style={{
-          transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
-        }}
-      >
+      <div className="card overflow-hidden hover:shadow-lift hover:-translate-y-1 transition-all duration-300 bg-white border border-brand-brown/5">
         {/* Image */}
-        <div className="relative aspect-square overflow-hidden">
+        <div className="relative aspect-square overflow-hidden bg-brand-cream-dark">
           <ProductImage
             product={product}
             variant="card"
@@ -64,17 +49,15 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
         </div>
 
         {/* Info */}
-        <div className="p-4">
-          <div className="flex items-start justify-between gap-2 mb-1">
-            <h3 className="font-serif font-semibold text-brand-brown text-base leading-tight">
-              {product.name}
-            </h3>
-          </div>
-          <p className="text-xs text-brand-brown/60 mb-3">
-            {product.variant} · From {PACK_LABELS[defaultSku.packSize]}
+        <div className="p-5">
+          <h3 className="font-serif font-semibold text-brand-brown text-base leading-tight mb-1 group-hover:text-brand-red transition-colors">
+            {product.name}
+          </h3>
+          <p className="text-xs text-brand-brown/60 mb-4">
+            {product.variant} · From {PACK_LABELS[defaultSku.packSize] || `${defaultSku.packSize}g`}
           </p>
 
-          <div className="flex items-baseline gap-2 mb-1">
+          <div className="flex items-baseline gap-2.5 mb-1">
             <span className="text-lg font-bold text-brand-red">
               {formatPrice(defaultSku.websitePrice)}
             </span>
@@ -82,7 +65,7 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
               {formatPrice(defaultSku.mrp)}
             </span>
           </div>
-          <p className="text-2xs text-brand-brown/60 mb-3">
+          <p className="text-2xs text-brand-brown/60 mb-4">
             {defaultSku.freeShipping ? (
               <span className="text-green-600 font-medium">Free shipping</span>
             ) : (
@@ -92,7 +75,11 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
 
           <button
             onClick={handleAdd}
-            className={`w-full ${added ? 'btn-secondary' : 'btn-outline'} text-sm py-2.5 flex items-center justify-center gap-2`}
+            className={`w-full py-2.5 px-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
+              added 
+                ? 'bg-emerald-600 text-white' 
+                : 'border border-brand-brown/20 text-brand-brown hover:bg-brand-brown/5'
+            }`}
             aria-label={`Add ${product.name} to cart`}
           >
             {added ? (
