@@ -72,7 +72,7 @@ export default function Products() {
     <>
       <SEO
         title="Products"
-        description="Browse the full range of Kawad Swad premium Jain papads — moong, chana, urad and combo packs in 200g, 500g and 1kg sizes."
+        description="Browse the full range of Kawad Swad premium papads from Nimar — moong, chana, urad and combo packs in 200g, 500g and 1kg sizes."
         path="/products"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -83,7 +83,7 @@ export default function Products() {
       <PageHero
         eyebrow="Catalogue"
         title="Our Products"
-        description="Premium Jain papads in moong, chana and urad varieties — each available in multiple pack sizes."
+        description="Premium papads in moong, chana and urad varieties — each available in multiple pack sizes."
       />
 
       <section className="container-max container-px py-12">
