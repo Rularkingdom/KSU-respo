@@ -1,4 +1,4 @@
-interface FormStatusMessageProps {
+export interface FormStatusMessageProps {
   status: 'idle' | 'loading' | 'success' | 'error';
   successMsg?: string;
   errorMsg?: string;
