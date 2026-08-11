@@ -5,7 +5,7 @@ import { Reveal, CTABanner } from '@/components/Reveal';
 import { FormField, FormStatusMessage, SubmitButton, useFormState, validators, FormContainer } from '@/components/Form';
 import { brand } from '@/data/brand';
 import { apiClient } from '@/services/api-client';
-import { Store, Package, Factory, Truck, Check, ArrowRight } from 'lucide-react';
+import { Store, Package, Factory, Truck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Distributor() {
