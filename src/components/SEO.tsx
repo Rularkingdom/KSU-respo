@@ -8,7 +8,7 @@ interface SEOProps {
   image?: string;
   type?: 'website' | 'article' | 'product';
   structuredData?: object;
-  indexable?: boolean; // New prop for robots control
+  indexable?: boolean;
 }
 
 const SITE_URL = 'https://kawadswad.com';
@@ -20,7 +20,7 @@ export function SEO({
   image,
   type = 'website',
   structuredData,
-  indexable = true, // Default to true
+  indexable = true,
 }: SEOProps) {
   const fullTitle = `${title} | ${brand.name}`;
   const url = `${SITE_URL}${path}`;
@@ -49,7 +49,6 @@ export function SEO({
       el.setAttribute('href', href);
     };
 
-    // Robots meta
     setMeta('robots', indexable ? 'index, follow' : 'noindex, follow');
     setMeta('description', description);
     setLink('canonical', url);
@@ -81,4 +80,75 @@ export function SEO({
   return null;
 }
 
-// ... (schema functions remain unchanged)
+export function organizationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: brand.name,
+    alternateName: brand.hindiName,
+    description: 'Traditional Indian papads rooted in the taste of Nimar.',
+    email: brand.email,
+    telephone: brand.phone,
+    funder: {
+      '@type': 'Organization',
+      name: brand.manufacturer,
+    },
+    address: {
+      '@type': 'PostalAddress',
+      addressRegion: 'Madhya Pradesh',
+      addressCountry: 'IN',
+    },
+    sameAs: [brand.instagramUrl, brand.youtubeUrl],
+  };
+}
+
+export function productSchema(name: string, description: string, price: number, category: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name,
+    description,
+    category,
+    brand: {
+      '@type': 'Brand',
+      name: brand.name,
+    },
+    offers: {
+      '@type': 'Offer',
+      price: price.toString(),
+      priceCurrency: 'INR',
+      availability: 'https://schema.org/InStock',
+    },
+  };
+}
+
+export function articleSchema(title: string, description: string, date: string, author: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    datePublished: date,
+    author: {
+      '@type': 'Organization',
+      name: author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: brand.name,
+    },
+  };
+}
+
+export function breadcrumbSchema(items: { name: string; path: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: `${SITE_URL}${item.path}`,
+    })),
+  };
+}
