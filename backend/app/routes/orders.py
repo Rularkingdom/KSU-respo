@@ -4,7 +4,7 @@ from fastapi import APIRouter, status, Query, Request, HTTPException
 from ..models.order import CreateOrderRequest, OrderTrackingResponse
 from ..services.order_service import process_and_save_order, get_order_by_id_and_phone
 
-router = APIRouter(prefix="/api", tags=["Orders & Health"])
+router = APIRouter(prefix="/api", tags=["Orders"])
 
 _RATE_LIMIT_STORE: Dict[str, List[float]] = {}
 MAX_LOOKUPS_PER_MINUTE = 10
@@ -20,10 +20,6 @@ def apply_rate_limit(client_ip: str):
         )
     history.append(now)
     _RATE_LIMIT_STORE[client_ip] = history
-
-@router.get("/health")
-async def health_check():
-    return {"status": "ok"}
 
 @router.post("/orders", status_code=status.HTTP_201_CREATED)
 async def create_order(payload: CreateOrderRequest):
