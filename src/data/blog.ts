@@ -76,17 +76,17 @@ export const blogPosts: BlogPost[] = [
     slug: 'jain-food-philosophy-and-papad',
     title: 'Jain Food Philosophy and Papad',
     excerpt:
-      'How Jain dietary principles shape the ingredients and preparation of our papad.',
+      'How Jain dietary principles shape traditional food choices and recipe selections.',
     category: 'Indian Food',
     date: '2025-05-20',
     readTime: '4 min read',
     author: 'Kawad Swad Team',
     content: [
-      'Jain food philosophy is rooted in the principle of ahimsa — non-violence. This shapes every aspect of what is eaten and how it is prepared.',
-      'A Jain diet is strictly vegetarian. It avoids root vegetables like onion and garlic, and prioritises ingredients that are grown above ground.',
-      'Our papad is made in keeping with these principles. We use lentil flours, natural spices and ingredients that align with Jain dietary practice.',
-      'This means our papad is suitable not only for Jain households but for anyone seeking a clean, vegetarian, onion-garlic-free snack.',
-      'We believe that respecting dietary traditions is part of making authentic food. Our Jain papad is a small tribute to that philosophy.',
+      'Jain food philosophy is rooted in the principle of ahimsa — non-violence. This shapes every aspect of traditional vegetarian dining.',
+      'A strict Jain diet avoids root vegetables like onion and garlic, prioritizing ingredients and preparation styles that align with specific dietary observances.',
+      'In our product offerings, we provide options that respect these dietary practices alongside our spiced and garlic-infused variants, allowing households to select varieties suited to their preferences.',
+      'Understanding traditional dietary philosophies helps consumers choose products that fit their lifestyle, whether they prefer standard lentil blends or specific variant options.',
+      'Respecting culinary traditions is part of offering a diverse range of traditional food choices for every table.',
     ],
   },
   {
