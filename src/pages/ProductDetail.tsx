@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Minus, Plus, ShoppingBag, Check, Truck, Shield, Leaf, ChevronRight, Zap } from 'lucide-react';
 import { SEO, breadcrumbSchema } from '../components/SEO';
 import { ProductCard } from '../components/ProductCard';
+import { ProductImage } from '../components/ProductImage';
 import { Reveal } from '../components/Reveal';
 import { ProductService } from '../services/product-service';
 import { PACK_LABELS } from '../data/products';
@@ -67,12 +68,13 @@ export default function ProductDetail() {
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Visual Presentation */}
           <div className="sticky top-28">
-            <div className="aspect-square rounded-4xl bg-brand-cream-dark flex items-center justify-center p-12 border border-brand-brown/5 shadow-soft">
-              <div className="text-center">
-                <span className="text-sm font-semibold tracking-[0.2em] text-brand-red uppercase mb-4 block">Kawad Swad</span>
-                <h1 className="font-serif text-5xl text-brand-brown font-bold">{product.name}</h1>
-                <p className="mt-4 text-brand-brown/50 uppercase tracking-widest text-xs">{selectedSku.sku}</p>
-              </div>
+            <div className="aspect-square rounded-4xl overflow-hidden bg-brand-cream-dark border border-brand-brown/5 shadow-soft">
+              <ProductImage
+                sku={selectedSku.sku}
+                product={product}
+                variant="detail"
+                className="w-full h-full"
+              />
             </div>
           </div>
 
