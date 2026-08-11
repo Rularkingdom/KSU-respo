@@ -35,7 +35,7 @@ export default function Contact() {
       const res = await apiClient.createEnquiry({
         type: 'general',
         contactPerson: form.values.name,
-        phone: form.values.phone || '9999999999', // Default fallback for general enquiries if phone optional
+        phone: form.values.phone ? form.values.phone : undefined,
         email: form.values.email,
         location: brand.region,
         message: `[Subject: ${form.values.subject || 'General Enquiry'}] ${form.values.message}`,
