@@ -117,7 +117,6 @@ export function productSchema(name: string, description: string, price: number, 
       '@type': 'Offer',
       price: price.toString(),
       priceCurrency: 'INR',
-      availability: 'https://schema.org/InStock',
     },
   };
 }
