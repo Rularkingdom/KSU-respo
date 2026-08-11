@@ -37,7 +37,7 @@ export default function Distributor() {
     <>
       <SEO
         title="Become a Distributor"
-        description="Partner with Kawad Swad as a distributor. Bring premium Jain papads from Nimar to your region. Express your interest and we will get in touch."
+        description="Partner with Kawad Swad as a distributor. Bring premium papads from Nimar to your region. Express your interest and we will get in touch."
         path="/distributor"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -49,7 +49,7 @@ export default function Distributor() {
       <PageHero
         eyebrow="Partnership"
         title="Become a Distributor"
-        description="Bring the taste of Nimar to your region. Partner with Kawad Swad to distribute premium Jain papads."
+        description="Bring the taste of Nimar to your region. Partner with Kawad Swad to distribute premium papads."
       />
 
       {/* Opportunity */}
