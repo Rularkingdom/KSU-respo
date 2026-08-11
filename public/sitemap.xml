@@ -97,4 +97,12 @@
   <url><loc>https://kawadswad.com/product/urad-guru-papad</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://kawadswad.com/product/urad-garlic-papad</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://kawadswad.com/product/kawad-swad-combo-pack</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+
+  <!-- Blog Articles (6 Articles) -->
+  <url><loc>https://kawadswad.com/blog/how-to-roast-papad-perfectly</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kawadswad.com/blog/moong-vs-chana-vs-urad-papad</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kawadswad.com/blog/papad-in-indian-thali-tradition</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kawadswad.com/blog/jain-food-philosophy-and-papad</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kawadswad.com/blog/starting-a-papad-business-in-india</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kawadswad.com/blog/papad-topping-ideas</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
