@@ -36,7 +36,7 @@ export default function WorkWithUs() {
     <>
       <SEO
         title="Work With Us"
-        description="Hotels, restaurants, caterers and food businesses — partner with Kawad Swad for premium Jain papads. Tell us about your business and how we can work together."
+        description="Hotels, restaurants, caterers and food businesses — partner with Kawad Swad for premium papads from Nimar. Tell us about your business and how we can work together."
         path="/work-with-us"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -48,7 +48,7 @@ export default function WorkWithUs() {
       <PageHero
         eyebrow="Partnerships"
         title="Work With Us"
-        description="Hotels, restaurants, caterers and food businesses — we supply premium Jain papads for your kitchen. Let's discuss how we can work together."
+        description="Hotels, restaurants, caterers and food businesses — we supply premium papads for your kitchen. Let's discuss how we can work together."
       />
 
       {/* Who we work with */}
