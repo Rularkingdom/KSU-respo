@@ -21,7 +21,7 @@ export default function Business() {
       <PageHero
         eyebrow="B2B Partnerships"
         title="Built for Consumers. Ready for Business."
-        description="We work with retailers, wholesalers, distributors, hotels, restaurants and food businesses across India. Find the right commercial pathway for your needs."
+        description="Business partnerships for retailers, wholesalers, distributors and food businesses. Find the right commercial pathway for your needs."
       />
 
       {/* Business Hub Pathways (Hierarchical Layout) */}
@@ -42,7 +42,7 @@ export default function Business() {
                     Bulk Orders & Institutional Supply
                   </h3>
                   <p className="text-base text-brand-cream/80 leading-relaxed max-w-xl mb-8">
-                    Large-quantity supply designed for businesses, events, hotels, caterers, and institutional requirements. Access our full catalogue with structured fulfillment.
+                    Large-quantity supply designed for businesses, events, hotels, caterers, and institutional requirements. Access our full catalogue and discuss supply requirements with our team.
                   </p>
                 </div>
                 <div>
@@ -91,7 +91,7 @@ export default function Business() {
             { 
               icon: Factory, 
               title: 'Manufacturing Standards', 
-              desc: 'Learn about our production workflow, quality controls, and FSSAI licensing.', 
+              desc: 'Explore our manufacturing approach, quality controls, and FSSAI licensing.', 
               link: '/manufacturing', 
               cta: 'View Manufacturing' 
             },
@@ -168,10 +168,10 @@ export default function Business() {
               <ul className="space-y-4 mb-8">
                 {[
                   'Authentic papad with broad consumer appeal',
-                  'Consistent quality from structured manufacturing standards',
+                  'Quality craftsmanship from Nimar traditions',
                   'Growing product range across moong, chana and urad varieties',
-                  'Flexible supply chain for businesses of different sizes',
-                  'Responsive communication and reliable fulfilment',
+                  'Flexible supply options for businesses of different sizes',
+                  'Responsive communication and dedicated commercial support',
                 ].map((point, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-brand-brown/75 leading-relaxed">
                     <Check className="w-5 h-5 text-brand-red shrink-0 mt-0.5" />
