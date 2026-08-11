@@ -17,7 +17,7 @@ async def connect_to_mongo():
     # Ensure indexes for order lookups & idempotency
     orders_col = db.db["orders"]
     await orders_col.create_index("orderId", unique=True)
-    await orders_col.create_index("idempotencyKey", sparse=True)
+    await orders_col.create_index("idempotencyKey", unique=True, sparse=True)
 
     # Ensure indexes for enquiries collection
     enquiries_col = db.db["enquiries"]
