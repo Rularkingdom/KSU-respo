@@ -67,7 +67,7 @@ export default function Checkout() {
   if (items.length === 0) {
     return (
       <>
-        <SEO title="Checkout" description="Complete your Kawad Swad order." path="/checkout" />
+        <SEO title="Checkout" description="Complete your Kawad Swad order." path="/checkout" indexable={false} />
         <div className="container-max container-px py-20 text-center">
           <ShoppingBag className="w-12 h-12 mx-auto text-brand-brown/20" />
           <h1 className="text-3xl font-serif font-bold mt-4">Your cart is empty</h1>
@@ -79,7 +79,7 @@ export default function Checkout() {
 
   return (
     <>
-      <SEO title="Checkout" description="Complete your Kawad Swad order." path="/checkout" />
+      <SEO title="Checkout" description="Complete your Kawad Swad order." path="/checkout" indexable={false} />
       <div className="bg-brand-cream py-12">
         <div className="container-max container-px">
           <div className="flex items-center gap-2 text-xs text-brand-brown/50 mb-6">
