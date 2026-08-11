@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { SEO, breadcrumbSchema } from '@/components/SEO';
 import { PageHero } from '@/components/Section';
-import { Reveal } from '@/components/Reveal';
 import { FormField, FormStatusMessage, SubmitButton, useFormState, validators, FormContainer } from '@/components/Form';
 import { brand } from '@/data/brand';
 import { apiClient } from '@/services/api-client';
