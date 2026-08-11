@@ -39,7 +39,7 @@ export function ProductImage({ sku, product, variant = 'card', className = '' }:
           src={imageConfig.primary}
           alt={imageConfig.alt}
           loading="lazy"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain p-2"
         />
       ) : (
         <>
