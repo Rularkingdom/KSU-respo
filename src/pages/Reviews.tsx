@@ -31,7 +31,7 @@ export default function Reviews() {
     <>
       <SEO
         title="Reviews"
-        description="Read and share reviews of Kawad Swad premium Jain papads. We are building a trusted review system with verified customer feedback."
+        description="Read and share reviews of Kawad Swad premium papads from Nimar. We are building a trusted review system with verified customer feedback."
         path="/reviews"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
