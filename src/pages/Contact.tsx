@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { SEO, breadcrumbSchema } from '@/components/SEO';
 import { PageHero } from '@/components/Section';
 import { Reveal } from '@/components/Reveal';
-import { FormField, FormStatusMessage, SubmitButton, useFormState, validators, simulateSubmit, FormContainer } from '@/components/Form';
+import { FormField, FormStatusMessage, SubmitButton, useFormState, validators, FormContainer } from '@/components/Form';
 import { brand } from '@/data/brand';
+import { apiClient } from '@/services/api-client';
 import { Phone, Mail, MessageCircle, Instagram, Youtube, MapPin, ArrowRight } from 'lucide-react';
 
 export default function Contact() {
@@ -14,18 +16,39 @@ export default function Contact() {
     message: '',
   });
 
+  const [enquiryId, setEnquiryId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
     const valid = form.validate({
       name: validators.required(),
       email: validators.email(),
       message: validators.required(),
     });
     if (!valid) return;
+
     form.setStatus('submitting');
-    await simulateSubmit(form.values);
-    form.setStatus('success');
-    form.reset();
+    try {
+      const idempotencyKey = 'contact-' + Date.now() + '-' + Math.random().toString(36).substring(2, 9);
+      const res = await apiClient.createEnquiry({
+        type: 'general',
+        contactPerson: form.values.name,
+        phone: form.values.phone || '9999999999', // Default fallback for general enquiries if phone optional
+        email: form.values.email,
+        location: brand.region,
+        message: `[Subject: ${form.values.subject || 'General Enquiry'}] ${form.values.message}`,
+        idempotencyKey,
+      });
+
+      setEnquiryId(res.enquiryId);
+      form.setStatus('success');
+      form.reset();
+    } catch (err) {
+      form.setStatus('error');
+      setErrorMessage(err instanceof Error ? err.message : 'Something went wrong. Please try again or contact us directly.');
+    }
   };
 
   const whatsappMsg = encodeURIComponent('Hello Kawad Swad, I have a question.');
@@ -34,7 +57,7 @@ export default function Contact() {
     <>
       <SEO
         title="Contact Us"
-        description="Get in touch with Kawad Swad. Call, WhatsApp or email us, or send a message through our contact form. We are here to help."
+        description="Get in touch with Kawad Swad. Call, WhatsApp or email us, or send a message through our contact form."
         path="/contact"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -51,24 +74,33 @@ export default function Contact() {
       <section className="container-max container-px py-12 lg:py-16">
         <div className="grid lg:grid-cols-[1fr_380px] gap-8 items-start">
           {/* Form */}
-          <div className="card p-6 sm:p-8">
+          <div className="card p-6 sm:p-8 bg-white border border-brand-brown/10 shadow-soft">
             <h2 className="text-2xl font-serif font-bold text-brand-brown mb-2">Send a Message</h2>
-            <p className="text-sm text-brand-brown/55 mb-6">Fill in the form and we will get back to you as soon as possible.</p>
+            <p className="text-sm text-brand-brown/60 mb-6">Fill in the form and we will get back to you as soon as possible.</p>
 
             {form.status === 'success' && (
-              <div className="mb-5">
-                <FormStatusMessage status="success" successMsg="Your message has been sent. We will contact you soon." />
+              <div className="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800">
+                <p className="text-sm font-semibold mb-1">Your message has been received. We'll be in touch soon.</p>
+                {enquiryId && (
+                  <p className="text-xs font-mono text-green-700">Enquiry ID: {enquiryId}</p>
+                )}
+              </div>
+            )}
+
+            {form.status === 'error' && errorMessage && (
+              <div className="mb-6">
+                <FormStatusMessage status="error" errorMsg={errorMessage} />
               </div>
             )}
 
             <form onSubmit={submit} noValidate>
               <FormContainer>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <FormField label="Name" name="name" value={form.values.name} onChange={(v) => form.setValue('name', v)} error={form.errors.name} required />
-                  <FormField label="Email" name="email" type="email" value={form.values.email} onChange={(v) => form.setValue('email', v)} error={form.errors.email} required />
+                  <FormField label="Name" name="name" value={form.values.name} onChange={(v) => form.setValue('name', v)} error={form.errors.name} required placeholder="Your name" />
+                  <FormField label="Email" name="email" type="email" value={form.values.email} onChange={(v) => form.setValue('email', v)} error={form.errors.email} required placeholder="you@domain.com" />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <FormField label="Phone (optional)" name="phone" type="tel" value={form.values.phone} onChange={(v) => form.setValue('phone', v)} />
+                  <FormField label="Phone (optional)" name="phone" type="tel" value={form.values.phone} onChange={(v) => form.setValue('phone', v)} placeholder="10-digit phone" />
                   <FormField label="Subject" name="subject" type="select" value={form.values.subject} onChange={(v) => form.setValue('subject', v)} options={['General Enquiry', 'Product Question', 'Order Support', 'Business Enquiry', 'Feedback', 'Other']} />
                 </div>
                 <FormField label="Message" name="message" type="textarea" value={form.values.message} onChange={(v) => form.setValue('message', v)} error={form.errors.message} required rows={5} placeholder="How can we help?" />
@@ -80,8 +112,8 @@ export default function Contact() {
           </div>
 
           {/* Contact info */}
-          <aside className="space-y-4 lg:sticky lg:top-24">
-            <div className="card p-6">
+          <aside className="space-y-6 lg:sticky lg:top-24">
+            <div className="card p-6 bg-white border border-brand-brown/10 shadow-soft">
               <h3 className="font-serif font-semibold text-brand-brown mb-4">Contact Information</h3>
               <div className="space-y-3">
                 <a href={`tel:${brand.phoneRaw}`} className="flex items-center gap-3 p-3 rounded-xl bg-brand-cream-dark hover:bg-brand-brown/10 transition-colors">
@@ -123,7 +155,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="card p-6">
+            <div className="card p-6 bg-white border border-brand-brown/10 shadow-soft">
               <h3 className="font-serif font-semibold text-brand-brown mb-4">Follow Us</h3>
               <div className="flex gap-3">
                 <a href={brand.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center gap-2 p-3 rounded-xl bg-brand-cream-dark hover:bg-brand-brown/10 transition-colors">
