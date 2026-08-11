@@ -31,7 +31,7 @@ export default function Reviews() {
     <>
       <SEO
         title="Customer Reviews"
-        description="Read and share verified reviews of Kawad Swad premium papads from Nimar. Honest, authentic customer feedback."
+        description="Read and share customer reviews of Kawad Swad premium papads from Nimar. Honest, authentic feedback."
         path="/reviews"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -42,7 +42,7 @@ export default function Reviews() {
       <PageHero
         eyebrow="Community & Feedback"
         title="Customer Reviews"
-        description="We believe in authentic, verified feedback. Customer reviews will appear here as orders are delivered and experiences are shared."
+        description="We believe in authentic feedback. Customer reviews will appear here as orders are delivered and experiences are shared."
       />
 
       {/* Reviews Empty State */}
@@ -58,7 +58,7 @@ export default function Reviews() {
               No reviews published yet
             </h2>
             <p className="text-sm lg:text-base text-brand-brown/70 leading-relaxed max-w-md mx-auto">
-              Verified customer reviews will appear here as they are collected. We do not use fabricated testimonials or placeholder reviews—every word here reflects real customer experiences.
+              Customer reviews will appear here as they are shared. We do not use fabricated testimonials or placeholder reviews—every word here reflects real customer experiences.
             </p>
           </div>
         </Reveal>
@@ -82,7 +82,7 @@ export default function Reviews() {
               <div className="card p-8 sm:p-10 bg-white border border-brand-brown/10 shadow-soft">
                 {form.status === 'success' && (
                   <div className="mb-6">
-                    <FormStatusMessage status="success" successMsg="Thank you for your review. It will be reviewed for authenticity before publishing." />
+                    <FormStatusMessage status="success" successMsg="Thank you for your review. Submitted reviews are reviewed before publication." />
                   </div>
                 )}
                 <form onSubmit={submit} noValidate>
@@ -126,7 +126,7 @@ export default function Reviews() {
                   </div>
 
                   <p className="mt-4 text-xs text-brand-brown/50 text-center leading-relaxed">
-                    Reviews are verified to ensure authenticity before publication.
+                    Submitted reviews are reviewed before publication.
                   </p>
                 </form>
               </div>
