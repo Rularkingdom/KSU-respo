@@ -66,11 +66,11 @@ export default function ProductDetail() {
 
       <div className="container-max container-px py-12">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
-          {/* Visual Presentation */}
+          {/* Visual Presentation - Family Level Image */}
           <div className="sticky top-28">
             <div className="aspect-square rounded-4xl overflow-hidden bg-brand-cream-dark border border-brand-brown/5 shadow-soft">
               <ProductImage
-                sku={selectedSku.sku}
+                productId={product.id}
                 product={product}
                 variant="detail"
                 className="w-full h-full"
@@ -89,7 +89,7 @@ export default function ProductDetail() {
             <div className="py-8 border-y border-brand-brown/10">
               <div className="mb-6">
                 <label className="text-sm font-bold uppercase tracking-widest text-brand-brown mb-3 block">Pack Size</label>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {product.skus.map((s, i) => (
                     <button
                       key={s.sku}
@@ -109,6 +109,13 @@ export default function ProductDetail() {
                 <span className="text-lg text-brand-brown/40 line-through">₹{selectedSku.mrp}</span>
                 {discount > 0 && <span className="badge-red mb-1.5">{discount}% OFF</span>}
               </div>
+              <p className="text-xs text-brand-brown/60 mt-2">
+                {selectedSku.freeShipping ? (
+                  <span className="text-green-600 font-medium">Free shipping</span>
+                ) : (
+                  `+ ₹${selectedSku.shipping} shipping`
+                )}
+              </p>
             </div>
 
             <div className="flex items-center gap-4 py-8">
