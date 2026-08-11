@@ -44,7 +44,7 @@ export default function TrackOrder() {
       const result = await apiClient.trackOrder(orderIdInput, phoneInput);
       setOrderData(result);
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unable to retrieve order details. Please verify your details and try again.';
+      const errorMessage = err instanceof Error ? err.message : (typeof err === 'object' && err !== null && 'message' in err && typeof (err as Record<string, unknown>).message === 'string' ? (err as Record<string, unknown>).message as string : 'Unable to retrieve order details. Please verify your details and try again.');
       setError(errorMessage);
     } finally {
       setLoading(false);
