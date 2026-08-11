@@ -17,7 +17,6 @@ export default function Checkout() {
   const form = useFormState(initial);
   const [error, setError] = useState('');
 
-  // Resolve items for display
   const resolvedItems = items.map((item) => {
     const res = ProductService.getProductBySku(item.sku);
     return {
@@ -44,10 +43,8 @@ export default function Checkout() {
     setError('');
     
     try {
-      // Generate a unique idempotency key for this checkout attempt
       const idempotencyKey = `idemp-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
-      // Await real backend order placement (server calculates authoritative prices & shipping)
       await placeOrder(
         form.values,
         items,
@@ -55,11 +52,13 @@ export default function Checkout() {
         idempotencyKey
       );
 
-      // Clear cart only after successful backend order creation
       clearCart();
       navigate('/order-success');
-    } catch (err: any) {
-      const msg = err?.message || 'We could not submit your order right now. Please try again.';
+    } catch (err: unknown) {
+      let msg = 'We could not submit your order right now. Please try again.';
+      if (err instanceof Error && err.message) {
+        msg = err.message;
+      }
       setError(msg);
       form.setStatus('error');
     }
@@ -81,78 +80,85 @@ export default function Checkout() {
   return (
     <>
       <SEO title="Checkout" description="Complete your Kawad Swad order." path="/checkout" />
-      <div className="container-max container-px py-10 lg:py-14">
-        <div className="flex items-center gap-2 text-xs text-brand-brown/50 mb-8">
-          <Link to="/cart" className="hover:text-brand-red">Cart</Link>
-          <ArrowRight className="w-3 h-3" />
-          <span>Checkout</span>
-        </div>
-        <div className="grid lg:grid-cols-[1fr_360px] gap-8 items-start">
-          <form onSubmit={submit} className="card p-6 sm:p-8">
-            <div className="flex items-center gap-3 mb-7">
-              <div className="w-10 h-10 rounded-full bg-brand-red/10 flex items-center justify-center">
-                <Lock className="w-5 h-5 text-brand-red" />
+      <div className="bg-brand-cream py-12">
+        <div className="container-max container-px">
+          <div className="flex items-center gap-2 text-xs text-brand-brown/50 mb-6">
+            <Link to="/cart" className="hover:text-brand-red">Cart</Link>
+            <ArrowRight className="w-3 h-3" />
+            <span>Checkout</span>
+          </div>
+
+          <div className="grid lg:grid-cols-[1fr_400px] gap-12 items-start">
+            <form onSubmit={submit} className="card p-8 bg-white border border-brand-brown/5 shadow-soft">
+              <div className="flex items-center gap-4 mb-8 pb-6 border-b border-brand-brown/10">
+                <div className="w-12 h-12 rounded-2xl bg-brand-red/10 flex items-center justify-center">
+                  <Lock className="w-6 h-6 text-brand-red" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-serif font-bold text-brand-brown">Delivery Details</h1>
+                  <p className="text-sm text-brand-brown/60">Provide your shipping information for order fulfillment.</p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-2xl font-serif font-bold">Delivery details</h1>
-                <p className="text-sm text-brand-brown/55">We will use these details to fulfil your order.</p>
+
+              <FormContainer>
+                <FormField label="Full Name" name="fullName" value={form.values.fullName} onChange={(v) => form.setValue('fullName', v)} error={form.errors.fullName} required autoComplete="name" placeholder="Your full name" />
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <FormField label="Phone" name="phone" type="tel" value={form.values.phone} onChange={(v) => form.setValue('phone', v)} error={form.errors.phone} required autoComplete="tel" placeholder="10-digit mobile number" />
+                  <FormField label="Email" name="email" type="email" value={form.values.email} onChange={(v) => form.setValue('email', v)} error={form.errors.email} required autoComplete="email" placeholder="you@example.com" />
+                </div>
+                <FormField label="Address" name="address" type="textarea" value={form.values.address} onChange={(v) => form.setValue('address', v)} error={form.errors.address} required placeholder="House number, street, landmark" rows={3} />
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <FormField label="City" name="city" value={form.values.city} onChange={(v) => form.setValue('city', v)} error={form.errors.city} required />
+                  <FormField label="State" name="state" value={form.values.state} onChange={(v) => form.setValue('state', v)} error={form.errors.state} required />
+                  <FormField label="PIN Code" name="pincode" type="text" value={form.values.pincode} onChange={(v) => form.setValue('pincode', v)} error={form.errors.pincode} required placeholder="6 digits" />
+                </div>
+              </FormContainer>
+
+              {error && (
+                <div className="mt-6">
+                  <FormStatusMessage status="error" successMsg="" errorMsg={error} />
+                </div>
+              )}
+
+              <div className="mt-8 pt-6 border-t border-brand-brown/10 flex flex-col sm:flex-row gap-4 items-center justify-between">
+                <Link to="/cart" className="inline-flex items-center gap-2 text-sm text-brand-brown/70 hover:text-brand-red font-medium">
+                  <ArrowLeft className="w-4 h-4" /> Back to cart
+                </Link>
+                <SubmitButton status={form.status} label="Place Order Request" />
               </div>
-            </div>
-            <FormContainer>
-              <FormField label="Full Name" name="fullName" value={form.values.fullName} onChange={(v) => form.setValue('fullName', v)} error={form.errors.fullName} required autoComplete="name" placeholder="Your full name" />
-              <div className="grid sm:grid-cols-2 gap-4">
-                <FormField label="Phone" name="phone" type="tel" value={form.values.phone} onChange={(v) => form.setValue('phone', v)} error={form.errors.phone} required autoComplete="tel" placeholder="10-digit phone number" />
-                <FormField label="Email" name="email" type="email" value={form.values.email} onChange={(v) => form.setValue('email', v)} error={form.errors.email} required autoComplete="email" placeholder="you@example.com" />
+              <p className="mt-6 text-2xs text-brand-brown/50 text-center">Secure order processing. No online payment required at this stage.</p>
+            </form>
+
+            <aside className="card p-8 bg-white border border-brand-brown/5 lg:sticky lg:top-28 shadow-soft">
+              <h2 className="text-xl font-serif font-bold text-brand-brown mb-6">Order Summary</h2>
+              <div className="space-y-4 mb-6">
+                {resolvedItems.map(({ sku, quantity, product, skuObj }) => {
+                  if (!product || !skuObj) return null;
+                  const packLabel = PACK_LABELS[skuObj.packSize] || `${skuObj.packSize}g`;
+                  return (
+                    <div key={sku} className="flex justify-between gap-4 text-sm pb-3 border-b border-brand-brown/5">
+                      <span className="text-brand-brown/70">{product.name} ({packLabel}) × {quantity}</span>
+                      <span className="font-semibold text-brand-brown whitespace-nowrap">{formatPrice(skuObj.websitePrice * quantity)}</span>
+                    </div>
+                  );
+                })}
               </div>
-              <FormField label="Address" name="address" type="textarea" value={form.values.address} onChange={(v) => form.setValue('address', v)} error={form.errors.address} required placeholder="House number, street, area" rows={3} />
-              <div className="grid sm:grid-cols-3 gap-4">
-                <FormField label="City" name="city" value={form.values.city} onChange={(v) => form.setValue('city', v)} error={form.errors.city} required />
-                <FormField label="State" name="state" value={form.values.state} onChange={(v) => form.setValue('state', v)} error={form.errors.state} required />
-                <FormField label="PIN Code" name="pincode" type="text" value={form.values.pincode} onChange={(v) => form.setValue('pincode', v)} error={form.errors.pincode} required placeholder="6 digits" />
+              <div className="space-y-3 text-sm pt-2">
+                <div className="flex justify-between text-brand-brown/70">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(subtotal)}</span>
+                </div>
+                <div className="flex justify-between text-brand-brown/70">
+                  <span>Shipping</span>
+                  <span>{shippingTotal ? formatPrice(shippingTotal) : 'Free'}</span>
+                </div>
+                <div className="border-t border-brand-brown/10 pt-4 flex justify-between text-lg font-bold text-brand-brown">
+                  <span>Total</span>
+                  <span className="text-brand-red">{formatPrice(total)}</span>
+                </div>
               </div>
-            </FormContainer>
-            {error && (
-              <div className="mt-5">
-                <FormStatusMessage status="error" successMsg="" errorMsg={error} />
-              </div>
-            )}
-            <div className="mt-7 flex flex-col sm:flex-row gap-3 items-center justify-between">
-              <Link to="/cart" className="inline-flex items-center gap-2 text-sm text-brand-brown/65 hover:text-brand-red">
-                <ArrowLeft className="w-4 h-4" /> Back to cart
-              </Link>
-              <SubmitButton status={form.status} label="Place Order" />
-            </div>
-            <p className="mt-5 text-2xs text-brand-brown/45 text-center">This checkout creates an order request. Online payment is not connected yet.</p>
-          </form>
-          <aside className="card p-6 lg:sticky lg:top-24">
-            <h2 className="text-xl font-serif font-bold mb-5">Order Summary</h2>
-            <div className="space-y-3 mb-5">
-              {resolvedItems.map(({ sku, quantity, product, skuObj }) => {
-                if (!product || !skuObj) return null;
-                const packLabel = PACK_LABELS[skuObj.packSize] || `${skuObj.packSize}g`;
-                return (
-                  <div key={sku} className="flex justify-between gap-3 text-sm">
-                    <span className="text-brand-brown/65">{product.name} · {packLabel} × {quantity}</span>
-                    <span className="font-medium whitespace-nowrap">{formatPrice(skuObj.websitePrice * quantity)}</span>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="border-t border-brand-brown/10 pt-4 space-y-2 text-sm">
-              <div className="flex justify-between text-brand-brown/65">
-                <span>Subtotal</span>
-                <span>{formatPrice(subtotal)}</span>
-              </div>
-              <div className="flex justify-between text-brand-brown/65">
-                <span>Shipping</span>
-                <span>{shippingTotal ? formatPrice(shippingTotal) : 'Free'}</span>
-              </div>
-              <div className="flex justify-between text-lg font-bold pt-2">
-                <span>Total</span>
-                <span className="text-brand-red">{formatPrice(total)}</span>
-              </div>
-            </div>
-          </aside>
+            </aside>
+          </div>
         </div>
       </div>
     </>
