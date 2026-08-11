@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { SEO, breadcrumbSchema } from '../components/SEO';
 import { ProductCard } from '../components/ProductCard';
-import { PageHero } from '../components/Section';
 import { Reveal } from '../components/Reveal';
 import { ProductService } from '../services/product-service';
 import { ProductCategory } from '../data/products';
@@ -29,12 +28,10 @@ export default function Shop() {
   const filtered = useMemo(() => {
     let list = ProductService.getAllProducts();
 
-    // 1. Compose Category Filter
     if (category !== 'all') {
       list = list.filter((p) => p.category === category);
     }
 
-    // 2. Compose Search Filter
     if (search.trim()) {
       const q = search.toLowerCase().trim();
       list = list.filter(
@@ -48,10 +45,8 @@ export default function Shop() {
       );
     }
 
-    // 3. Compose Max Price Filter
     list = list.filter((p) => p.skus[0].websitePrice <= maxPrice);
 
-    // 4. Sort
     switch (sortBy) {
       case 'price-low':
         list = [...list].sort((a, b) => a.skus[0].websitePrice - b.skus[0].websitePrice);
@@ -70,7 +65,7 @@ export default function Shop() {
   return (
     <>
       <SEO
-        title="Shop"
+        title="Shop Premium Papads"
         description="Shop premium Jain papads online. Browse moong, chana and urad papad varieties, choose your pack size and get them delivered."
         path="/shop"
         structuredData={breadcrumbSchema([
@@ -79,72 +74,27 @@ export default function Shop() {
         ])}
       />
 
-      <PageHero
-        eyebrow="Online Store"
-        title="Shop Papads"
-        description="Browse our full range, pick your favourite variants and pack sizes, and get them delivered to your door."
-      />
+      <section className="bg-brand-cream py-16">
+        <div className="container-max container-px text-center">
+          <h1 className="text-4xl lg:text-5xl font-serif font-bold text-brand-brown mb-4">Our Papad Selection</h1>
+          <p className="text-brand-brown/70 max-w-lg mx-auto">Discover the authentic taste of Nimar with our premium, carefully crafted papads.</p>
+        </div>
+      </section>
 
       <section className="container-max container-px py-12">
-        {/* Search bar */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-brown/40" />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search papad, variant, category..."
-              className="input-field pl-10"
-              aria-label="Search products"
-            />
-          </div>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-            className="input-field sm:w-48"
-            aria-label="Sort products"
-          >
-            <option value="default">Sort: Default</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="name">Name: A to Z</option>
-          </select>
-          <button
-            onClick={() => setShowMobileFilters((s) => !s)}
-            className="btn-outline lg:hidden flex items-center justify-center gap-2"
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            Filters
-          </button>
-        </div>
-
-        <div className="grid lg:grid-cols-[240px_1fr] gap-8">
-          {/* Filters */}
-          <aside className={`${showMobileFilters ? 'block' : 'hidden'} lg:block`}>
-            <div className="card p-5 sticky top-24">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-serif font-semibold text-brand-brown">Filters</h3>
-                <button
-                  onClick={() => setShowMobileFilters(false)}
-                  className="lg:hidden p-1 rounded-lg hover:bg-brand-brown/5"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Category */}
-              <div className="mb-6">
-                <p className="label-field">Category</p>
-                <div className="space-y-1.5">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar Filters */}
+          <aside className={`lg:w-64 flex-shrink-0 ${showMobileFilters ? 'block' : 'hidden lg:block'}`}>
+            <div className="sticky top-24 space-y-8">
+              <div>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-brand-brown mb-4">Category</h3>
+                <div className="space-y-1">
                   {categories.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => setCategory(cat)}
-                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                        category === cat
-                          ? 'bg-brand-red/10 text-brand-red font-medium'
-                          : 'text-brand-brown/70 hover:bg-brand-brown/5'
+                      className={`block w-full text-left py-2 text-sm transition-colors ${
+                        category === cat ? 'text-brand-red font-semibold' : 'text-brand-brown/70 hover:text-brand-red'
                       }`}
                     >
                       {cat === 'all' ? 'All Products' : CATEGORY_LABELS[cat]}
@@ -153,57 +103,61 @@ export default function Shop() {
                 </div>
               </div>
 
-              {/* Price filter */}
               <div>
-                <p className="label-field">Max Price: ₹{maxPrice}</p>
+                <label className="text-sm font-bold uppercase tracking-widest text-brand-brown mb-4 block">
+                  Price Limit: <span className="text-brand-red">₹{maxPrice}</span>
+                </label>
                 <input
                   type="range"
                   min="79"
                   max="700"
-                  step="10"
+                  step="50"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(Number(e.target.value))}
-                  className="w-full accent-brand-red"
-                  aria-label="Maximum price filter"
+                  className="w-full h-1 bg-brand-brown/10 rounded-full appearance-none accent-brand-red cursor-pointer"
                 />
-                <div className="flex justify-between text-2xs text-brand-brown/40 mt-1">
-                  <span>₹79</span>
-                  <span>₹700</span>
-                </div>
               </div>
             </div>
           </aside>
 
-          {/* Grid */}
-          <div>
-            <p className="text-sm text-brand-brown/60 mb-4">
-              {filtered.length} product{filtered.length !== 1 ? 's' : ''}
-            </p>
-
-            {filtered.length === 0 ? (
-              <div className="card p-12 text-center">
-                <p className="text-brand-brown/60 mb-2">No products match your filters.</p>
-                <button
-                  onClick={() => {
-                    setCategory('all');
-                    setSearch('');
-                    setMaxPrice(700);
-                  }}
-                  className="text-brand-red font-medium hover:underline"
+          {/* Product Grid */}
+          <main className="flex-1">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+              <p className="text-sm text-brand-brown/60">Showing {filtered.length} products</p>
+              <div className="flex gap-2">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                  className="bg-transparent border-none text-sm font-medium text-brand-brown focus:ring-0 cursor-pointer"
                 >
-                  Clear filters
+                  <option value="default">Sort: Recommended</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                </select>
+                <button
+                  onClick={() => setShowMobileFilters(!showMobileFilters)}
+                  className="lg:hidden p-2 text-brand-brown"
+                >
+                  <SlidersHorizontal className="w-5 h-5" />
                 </button>
               </div>
+            </div>
+
+            {filtered.length === 0 ? (
+              <div className="py-20 text-center border-2 border-dashed border-brand-brown/10 rounded-2xl">
+                <p className="text-brand-brown/60">No products match your filters.</p>
+                <button onClick={() => { setCategory('all'); setSearch(''); setMaxPrice(700); }} className="text-brand-red mt-2 font-medium hover:underline">Clear all</button>
+              </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                {filtered.map((product, i) => (
-                  <Reveal key={product.id} delay={Math.min(i * 50, 300)}>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+                {filtered.map((product) => (
+                  <Reveal key={product.id}>
                     <ProductCard product={product} />
                   </Reveal>
                 ))}
               </div>
             )}
-          </div>
+          </main>
         </div>
       </section>
     </>
