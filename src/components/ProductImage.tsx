@@ -1,22 +1,22 @@
-import { getProductImage } from '@/data/product-images';
+import { getProductFamilyImage } from '@/data/product-images';
 import type { ProductFamily } from '@/data/products';
 import { CATEGORY_LABELS } from '@/data/products';
 
 interface ProductImageProps {
-  sku?: string;
+  productId?: string;
   product?: ProductFamily;
   variant?: 'card' | 'detail' | 'hero';
   className?: string;
 }
 
 /**
- * Shared ProductImage component supporting deterministic SKU-based image resolution
+ * Shared ProductImage component supporting deterministic product-family image resolution
  * and fallback to a controlled placeholder state when real assets are pending.
  */
-export function ProductImage({ sku, product, variant = 'card', className = '' }: ProductImageProps) {
-  const resolvedSku = sku || (product ? product.sku : '');
-  const imageConfig = getProductImage(resolvedSku);
-  const targetProduct = product || (resolvedSku ? undefined : undefined);
+export function ProductImage({ productId, product, variant = 'card', className = '' }: ProductImageProps) {
+  const resolvedId = productId || (product ? product.id : '');
+  const imageConfig = getProductFamilyImage(resolvedId);
+  const targetProduct = product;
   const categoryLabel = targetProduct ? CATEGORY_LABELS[targetProduct.category] : 'Papad';
 
   const sizeClass =
