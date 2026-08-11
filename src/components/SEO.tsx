@@ -83,7 +83,7 @@ export function organizationSchema() {
     '@type': 'Organization',
     name: brand.name,
     alternateName: brand.hindiName,
-    description: 'Premium Jain Papad manufacturer from Nimar, Madhya Pradesh, India.',
+    description: 'Premium papad manufacturer from Nimar, Madhya Pradesh, India.',
     email: brand.email,
     telephone: brand.phone,
     funder: {
