@@ -1,22 +1,23 @@
-import { brand } from '@/data/brand';
+import { getProductImage } from '@/data/product-images';
 import type { ProductFamily } from '@/data/products';
 import { CATEGORY_LABELS } from '@/data/products';
 
 interface ProductImageProps {
-  product: ProductFamily;
+  sku?: string;
+  product?: ProductFamily;
   variant?: 'card' | 'detail' | 'hero';
   className?: string;
 }
 
 /**
- * Branded placeholder product tile.
- * Designed to be replaced one-for-one with a real product PNG:
- *   <img src={`/products/${product.id}.png`} alt={product.name} />
- * The outer aspect ratio and sizing remain identical.
+ * Shared ProductImage component supporting deterministic SKU-based image resolution
+ * and fallback to a controlled placeholder state when real assets are pending.
  */
-export function ProductImage({ product, variant = 'card', className = '' }: ProductImageProps) {
-  const categoryLabel = CATEGORY_LABELS[product.category];
-  const isCombo = product.category === 'combo';
+export function ProductImage({ sku, product, variant = 'card', className = '' }: ProductImageProps) {
+  const resolvedSku = sku || (product ? product.sku : '');
+  const imageConfig = getProductImage(resolvedSku);
+  const targetProduct = product || (resolvedSku ? undefined : undefined);
+  const categoryLabel = targetProduct ? CATEGORY_LABELS[targetProduct.category] : 'Papad';
 
   const sizeClass =
     variant === 'detail'
@@ -25,47 +26,62 @@ export function ProductImage({ product, variant = 'card', className = '' }: Prod
         ? 'text-8xl'
         : 'text-5xl';
 
+  const isAvailable = imageConfig.status === 'available' && Boolean(imageConfig.primary);
+
   return (
     <div
       className={`relative flex items-center justify-center overflow-hidden ${className}`}
-      aria-label={`${product.name} product image placeholder`}
+      aria-label={imageConfig.alt}
       role="img"
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-cream-dark via-brand-cream to-brand-yellow/10" />
+      {isAvailable ? (
+        <img
+          src={imageConfig.primary}
+          alt={imageConfig.alt}
+          loading="lazy"
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <>
+          {/* Background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-cream-dark via-brand-cream to-brand-yellow/10" />
 
-      {/* Decorative dot pattern */}
-      <div className="absolute inset-0 bg-dots opacity-40" />
+          {/* Decorative dot pattern */}
+          <div className="absolute inset-0 bg-dots opacity-40" />
 
-      {/* Papad silhouette */}
-      <div className="relative z-10 flex flex-col items-center gap-3 p-4">
-        <div
-          className={`${sizeClass} font-serif font-bold text-brand-red/20 leading-none`}
-          aria-hidden="true"
-        >
-          ◯
-        </div>
-        <div className="text-center">
-          <p className="font-serif font-semibold text-brand-brown text-sm sm:text-base">
-            {product.name}
-          </p>
-          <p className="font-devanagari text-xs text-brand-brown/60 mt-0.5">
-            {product.hindiName}
-          </p>
-        </div>
-      </div>
+          {/* Papad silhouette & Placeholder text */}
+          <div className="relative z-10 flex flex-col items-center gap-3 p-4 text-center">
+            <div
+              className={`${sizeClass} font-serif font-bold text-brand-red/20 leading-none`}
+              aria-hidden="true"
+            >
+              ◯
+            </div>
+            <div>
+              <p className="font-serif font-semibold text-brand-brown text-sm sm:text-base">
+                {imageConfig.alt}
+              </p>
+              <p className="font-sans text-2xs text-brand-brown/50 mt-1 uppercase tracking-wider">
+                Product image coming soon
+              </p>
+            </div>
+          </div>
 
-      {/* Category badge */}
-      <div className="absolute top-3 left-3 z-10">
-        <span className="badge-brown">{categoryLabel}</span>
-      </div>
+          {/* Category badge if product data available */}
+          {targetProduct && (
+            <div className="absolute top-3 left-3 z-10">
+              <span className="badge-brown">{categoryLabel}</span>
+            </div>
+          )}
 
-      {/* Brand mark */}
-      <div className="absolute bottom-3 right-3 z-10">
-        <span className="text-2xs font-bold uppercase tracking-wider text-brand-brown/40">
-          {isCombo ? 'Combo' : 'Placeholder'}
-        </span>
-      </div>
+          {/* Status mark */}
+          <div className="absolute bottom-3 right-3 z-10">
+            <span className="text-2xs font-bold uppercase tracking-wider text-brand-brown/40">
+              Pending Asset
+            </span>
+          </div>
+        </>
+      )}
     </div>
   );
 }
