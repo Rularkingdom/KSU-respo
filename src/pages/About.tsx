@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Leaf, Shield, Award, Sparkles, ArrowRight, MapPin, Factory } from 'lucide-react';
 import { SEO, breadcrumbSchema } from '@/components/SEO';
-import { PageHero, PlaceholderImage } from '@/components/Section';
+import { PlaceholderImage } from '@/components/Section';
 import { Reveal, CTABanner } from '@/components/Reveal';
 import { brand } from '@/data/brand';
 
