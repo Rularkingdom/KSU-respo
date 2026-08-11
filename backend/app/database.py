@@ -18,6 +18,11 @@ async def connect_to_mongo():
     orders_col = db.db["orders"]
     await orders_col.create_index("orderId", unique=True)
     await orders_col.create_index("idempotencyKey", sparse=True)
+
+    # Ensure indexes for enquiries collection
+    enquiries_col = db.db["enquiries"]
+    await enquiries_col.create_index("enquiryId", unique=True)
+    await enquiries_col.create_index("createdAt")
     
     print("Connected to MongoDB & indexes verified successfully!")
 
