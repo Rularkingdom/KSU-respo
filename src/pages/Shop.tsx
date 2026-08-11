@@ -66,7 +66,7 @@ export default function Shop() {
     <>
       <SEO
         title="Shop Premium Papads"
-        description="Shop premium Jain papads online. Browse moong, chana and urad papad varieties, choose your pack size and get them delivered."
+        description="Shop premium papads online from Nimar. Browse moong, chana and urad papad varieties, choose your pack size and get them delivered."
         path="/shop"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
