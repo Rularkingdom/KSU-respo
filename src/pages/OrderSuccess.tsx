@@ -11,7 +11,7 @@ export default function OrderSuccess() {
   if (!lastOrder) {
     return (
       <>
-        <SEO title="Order Unavailable" description="Order information is currently unavailable." path="/order-success" />
+        <SEO title="Order Unavailable" description="Order information is currently unavailable." path="/order-success" indexable={false} />
         <section className="container-max container-px py-20 text-center">
           <div className="w-20 h-20 rounded-full bg-amber-50 flex items-center justify-center mx-auto">
             <ShoppingBag className="w-10 h-10 text-brand-brown/30" />
@@ -34,7 +34,7 @@ export default function OrderSuccess() {
 
   return (
     <>
-      <SEO title="Order Received" description="Your Kawad Swad order request has been received." path="/order-success" />
+      <SEO title="Order Received" description="Your Kawad Swad order request has been received." path="/order-success" indexable={false} />
       <section className="container-max container-px py-16 lg:py-24">
         <div className="max-w-2xl mx-auto text-center">
           <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto">
