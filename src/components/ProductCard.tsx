@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Check, ChevronDown } from 'lucide-react';
 import type { ProductFamily } from '../data/products';
@@ -15,14 +15,14 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
   const { addItem } = useCart();
   const [selectedSkuIndex, setSelectedSkuIndex] = useState(0);
   const [added, setAdded] = useState(false);
+  const selectId = useId();
 
   const selectedSku = product.skus[selectedSkuIndex] || product.skus[0];
   const discount = Math.round(
     ((selectedSku.mrp - selectedSku.websitePrice) / selectedSku.mrp) * 100,
   );
 
-  const handleAdd = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleAdd = () => {
     addItem(selectedSku.sku, 1);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -75,20 +75,25 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
                 {PACK_LABELS[selectedSku.packSize] || `${selectedSku.packSize}g`} Combo
               </div>
             ) : (
-              <div className="relative inline-block w-full">
-                <select
-                  value={selectedSkuIndex}
-                  onChange={handleSelectChange}
-                  aria-label="Select pack size"
-                  className="w-full appearance-none bg-brand-cream/50 border border-brand-brown/15 rounded-xl px-3 py-1.5 pr-8 text-xs font-semibold text-brand-brown focus:outline-none focus:border-brand-red cursor-pointer transition-colors"
-                >
-                  {product.skus.map((skuObj, idx) => (
-                    <option key={skuObj.sku} value={idx}>
-                      Pack Size: {PACK_LABELS[skuObj.packSize] || `${skuObj.packSize}g`}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-brand-brown/50 pointer-events-none" />
+              <div className="space-y-1.5">
+                <label htmlFor={`pack-size-${selectId}`} className="block text-2xs font-bold uppercase tracking-wider text-brand-brown/70">
+                  Pack Size
+                </label>
+                <div className="relative inline-block w-full">
+                  <select
+                    id={`pack-size-${selectId}`}
+                    value={selectedSkuIndex}
+                    onChange={handleSelectChange}
+                    className="w-full appearance-none bg-brand-cream/50 border border-brand-brown/15 rounded-xl px-3 py-1.5 pr-8 text-xs font-semibold text-brand-brown focus:outline-none focus:border-brand-red cursor-pointer transition-colors"
+                  >
+                    {product.skus.map((skuObj, idx) => (
+                      <option key={skuObj.sku} value={idx}>
+                        {PACK_LABELS[skuObj.packSize] || `${skuObj.packSize}g`}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-brand-brown/50 pointer-events-none" />
+                </div>
               </div>
             )}
           </div>
