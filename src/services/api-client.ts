@@ -54,6 +54,29 @@ interface BackendOrderResponse {
   status: OrderStatusType;
 }
 
+export type EnquiryType = 'bulk' | 'distributor' | 'food-business' | 'general';
+
+export interface CreateEnquiryPayload {
+  type: EnquiryType;
+  businessName?: string;
+  contactPerson: string;
+  phone: string;
+  email: string;
+  businessType?: string;
+  location: string;
+  productsOfInterest?: string;
+  quantity?: string;
+  message: string;
+  idempotencyKey?: string;
+}
+
+export interface EnquiryResponse {
+  success: boolean;
+  enquiryId: string;
+  message: string;
+  createdAt: string;
+}
+
 export const apiClient = {
   async checkHealth(): Promise<boolean> {
     try {
@@ -142,5 +165,32 @@ export const apiClient = {
     }
 
     return (await response.json()) as TrackedOrder;
+  },
+
+  async createEnquiry(payload: CreateEnquiryPayload): Promise<EnquiryResponse> {
+    const response = await fetch(`${API_BASE_URL}/api/enquiries`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      let errorMsg = 'Failed to submit enquiry.';
+      try {
+        const errorData = (await response.json()) as { detail?: string | unknown };
+        if (errorData.detail) {
+          errorMsg = typeof errorData.detail === 'string' 
+            ? errorData.detail 
+            : JSON.stringify(errorData.detail);
+        }
+      } catch {
+        // fallback
+      }
+      throw new Error(errorMsg);
+    }
+
+    return (await response.json()) as EnquiryResponse;
   },
 };
