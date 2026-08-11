@@ -2,6 +2,7 @@ from datetime import datetime
 import random
 import string
 from fastapi import HTTPException, status
+from pymongo.errors import DuplicateKeyError
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from backend.app.models.enquiry import CreateEnquiryRequest, EnquiryInDB, EnquiryResponse
 
@@ -15,7 +16,7 @@ def generate_enquiry_id() -> str:
 async def create_enquiry_record(
     db: AsyncIOMotorDatabase, payload: CreateEnquiryRequest
 ) -> EnquiryResponse:
-    # 1. Idempotency check
+    # 1. Idempotency pre-check
     if payload.idempotencyKey:
         existing = await db.enquiries.find_one({"idempotencyKey": payload.idempotencyKey})
         if existing:
@@ -79,6 +80,20 @@ async def create_enquiry_record(
 
     try:
         await db.enquiries.insert_one(enquiry_doc.dict())
+    except DuplicateKeyError:
+        if payload.idempotencyKey:
+            existing = await db.enquiries.find_one({"idempotencyKey": payload.idempotencyKey})
+            if existing:
+                return EnquiryResponse(
+                    success=True,
+                    enquiryId=existing["enquiryId"],
+                    message="Your enquiry has been received. We'll be in touch soon.",
+                    createdAt=existing["createdAt"].isoformat() if isinstance(existing["createdAt"], datetime) else str(existing["createdAt"]),
+                )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="An enquiry with this reference already exists.",
+        )
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
