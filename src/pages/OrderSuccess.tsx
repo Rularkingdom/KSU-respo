@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { CheckCircle, Package, ArrowRight, ShoppingBag, Truck } from 'lucide-react';
+import { CheckCircle, ArrowRight, ShoppingBag, Truck } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { useOrder } from '../context/OrderContext';
 import { formatPrice } from '../context/CartContext';
