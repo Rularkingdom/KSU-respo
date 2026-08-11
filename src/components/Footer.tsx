@@ -59,15 +59,13 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-full bg-brand-red flex items-center justify-center">
-                <span className="text-white font-serif font-bold text-lg">क</span>
-              </div>
-              <div>
-                <div className="font-serif font-bold text-white text-lg">KAWAD SWAD</div>
-                <div className="font-devanagari text-2xs text-brand-cream/60">कवाड़ स्वाद</div>
-              </div>
-            </div>
+            <Link to="/" className="flex items-center gap-3 mb-4 inline-block">
+              <img
+                src="/logo.png"
+                alt="KAWAD SWAD"
+                className="h-12 w-auto object-contain"
+              />
+            </Link>
             <p className="text-sm text-brand-cream/70 mb-4 max-w-xs">
               Premium Jain Papad from Nimar, Madhya Pradesh. {brand.tagline}
             </p>
