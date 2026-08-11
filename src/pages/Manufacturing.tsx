@@ -2,22 +2,43 @@ import { SEO, breadcrumbSchema } from '@/components/SEO';
 import { PageHero, PlaceholderImage } from '@/components/Section';
 import { Reveal, CTABanner } from '@/components/Reveal';
 import { brand } from '@/data/brand';
-import { Leaf, Shield, Factory, Check } from 'lucide-react';
+import { Leaf, Shield, Factory, Check, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const steps = [
-  { num: '01', title: 'Ingredient Preparation', desc: 'Premium lentil flours and natural spices are measured and prepared with care, forming the base of every papad.' },
-  { num: '02', title: 'Papad Preparation', desc: 'The dough is prepared and shaped into papads following traditional methods, preserving the authentic texture and taste.' },
-  { num: '03', title: 'Drying', desc: 'Shaped papads are dried under controlled conditions to achieve the right crispness and shelf stability.' },
-  { num: '04', title: 'Quality Checking', desc: 'Every batch is checked for consistency, texture and quality before it moves to packaging.' },
-  { num: '05', title: 'Packaging', desc: 'Papads are sealed in hygienic packaging designed to preserve freshness from our facility to your kitchen.' },
+  { 
+    num: '01', 
+    title: 'Raw Material Selection', 
+    desc: 'Premium quality moong, chana, and urad dal flours are sourced alongside authentic regional spices, ensuring the foundational purity and flavor profile of every batch.' 
+  },
+  { 
+    num: '02', 
+    title: 'Dough Mixing & Shaping', 
+    desc: 'Flours and spice blends are precisely combined with water and natural leavening agents, kneaded to optimal consistency, and shaped into traditional papads following established recipes.' 
+  },
+  { 
+    num: '03', 
+    title: 'Controlled Drying', 
+    desc: 'Shaped papads undergo controlled sun-drying and air-seasoning environments to achieve ideal moisture levels, structural integrity, and long-lasting crispness.' 
+  },
+  { 
+    num: '04', 
+    title: 'Quality Inspection', 
+    desc: 'Every production lot is carefully reviewed for uniform thickness, texture consistency, surface perfection, and absence of physical defects before approval.' 
+  },
+  { 
+    num: '05', 
+    title: 'Hygienic Packaging', 
+    desc: 'Finished papads are securely sealed in moisture-resistant, food-grade packaging to preserve authentic flavor and crunch from our Nimar facility to retail and commercial kitchens.' 
+  },
 ];
 
 export default function Manufacturing() {
   return (
     <>
       <SEO
-        title="Manufacturing"
-        description="Explore the Kawad Swad manufacturing process — from ingredient preparation to packaging — built on traditional recipes and modern quality standards."
+        title="Manufacturing Process"
+        description="Explore the Kawad Swad manufacturing process at Kawad Swad Udhyog in Nimar — from raw material sourcing and shaping to quality checks and sealed packaging."
         path="/manufacturing"
         structuredData={breadcrumbSchema([
           { name: 'Home', path: '/' },
@@ -27,23 +48,27 @@ export default function Manufacturing() {
 
       <PageHero
         eyebrow="Our Process"
-        title="Manufacturing"
-        description="A process built on tradition and precision. Every stage — from ingredients to packaging — is designed to preserve authentic taste while meeting modern quality standards."
+        title="Crafted with precision, grounded in tradition."
+        description="A structured manufacturing workflow designed to preserve authentic Nimar papad recipes while maintaining rigorous quality and hygiene standards."
       />
 
-      {/* Process steps */}
-      <section className="container-max container-px py-16">
-        <div className="space-y-12">
+      {/* Editorial Process Steps */}
+      <section className="container-max container-px py-20 lg:py-28">
+        <div className="space-y-16 lg:space-y-24">
           {steps.map((step, i) => (
             <Reveal key={i}>
-              <div className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-center ${i % 2 === 1 ? 'lg:[direction:rtl]' : ''}`}>
-                <div className="lg:[direction:ltr]">
-                  <PlaceholderImage label={`${step.title} — placeholder`} aspect="aspect-[4/3]" />
+              <div className={`grid lg:grid-cols-12 gap-8 lg:gap-16 items-center ${i % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}>
+                <div className={`lg:col-span-6 ${i % 2 === 1 ? 'lg:col-start-7' : ''}`}>
+                  <div className="rounded-3xl overflow-hidden shadow-lift border border-brand-brown/10">
+                    <PlaceholderImage label={`${step.title} — process view`} aspect="aspect-[4/3]" />
+                  </div>
                 </div>
-                <div className="lg:[direction:ltr]">
-                  <span className="text-5xl font-serif font-bold text-brand-red/15 block mb-2">{step.num}</span>
-                  <h2 className="text-2xl lg:text-3xl font-serif font-bold text-brand-brown mb-3">{step.title}</h2>
-                  <p className="text-base text-brand-brown/70 leading-relaxed">{step.desc}</p>
+                <div className={`lg:col-span-6 ${i % 2 === 1 ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
+                  <span className="text-6xl font-serif font-bold text-brand-red/20 block mb-3">{step.num}</span>
+                  <h2 className="text-2xl lg:text-4xl font-serif font-bold text-brand-brown mb-4">{step.title}</h2>
+                  <p className="text-base lg:text-lg text-brand-brown/70 leading-relaxed font-normal text-pretty">
+                    {step.desc}
+                  </p>
                 </div>
               </div>
             </Reveal>
@@ -51,28 +76,29 @@ export default function Manufacturing() {
         </div>
       </section>
 
-      {/* Philosophy */}
-      <section className="bg-brand-brown text-brand-cream py-16">
+      {/* Manufacturing Philosophy */}
+      <section className="bg-brand-brown text-brand-cream py-20">
         <div className="container-max container-px">
           <Reveal>
             <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-yellow mb-3">Manufacturing Philosophy</p>
-              <h2 className="text-3xl lg:text-4xl font-serif font-bold text-white mb-4 text-balance">
-                Traditional taste, modern standards.
+              <span className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-yellow mb-3 block">Manufacturing Philosophy</span>
+              <h2 className="text-3xl lg:text-4xl font-serif font-bold text-white mb-6 text-balance">
+                Honoring tradition through structured execution.
               </h2>
-              <p className="text-base lg:text-lg text-brand-cream/70 leading-relaxed text-pretty">
-                We believe that great papad is not mass-produced — it is crafted. Our manufacturing combines time-honoured recipes with hygienic, consistent processes. We do not chase shortcuts. We invest in quality at every step, because the taste of a papad is only as good as the care behind it.
+              <p className="text-base lg:text-lg text-brand-cream/80 leading-relaxed text-pretty mb-10">
+                At Kawad Swad Udhyog, we believe that exceptional papad requires both respect for traditional culinary methods and strict adherence to modern operational hygiene. We invest in careful sourcing, controlled processing environments, and consistent batch testing.
               </p>
-              <div className="mt-8 grid sm:grid-cols-3 gap-4">
+              
+              <div className="grid sm:grid-cols-3 gap-6 pt-6 border-t border-brand-cream/15">
                 {[
-                  { icon: Leaf, title: 'Authentic Recipes', desc: 'True to Nimar tradition' },
-                  { icon: Shield, title: 'Hygienic Process', desc: 'FSSAI ' + brand.fssai },
-                  { icon: Factory, title: 'Consistent Quality', desc: 'Every batch, every pack' },
-                ].map((item, i) => (
-                  <div key={i} className="p-4 rounded-xl bg-brand-cream/5">
-                    <item.icon className="w-6 h-6 text-brand-yellow mb-2" />
-                    <h3 className="text-sm font-semibold text-white">{item.title}</h3>
-                    <p className="text-2xs text-brand-cream/50">{item.desc}</p>
+                  { icon: Leaf, title: 'Authentic Recipes', desc: 'Rooted in Nimar traditions' },
+                  { icon: Shield, title: 'FSSAI Compliant', desc: `Licence No. ${brand.fssai}` },
+                  { icon: Factory, title: 'Reliable Output', desc: 'Consistent commercial supply' },
+                ].map((item, idx) => (
+                  <div key={idx} className="p-5 rounded-2xl bg-white/5 border border-white/10">
+                    <item.icon className="w-6 h-6 text-brand-yellow mb-3" />
+                    <h3 className="text-sm font-serif font-semibold text-white mb-1">{item.title}</h3>
+                    <p className="text-xs text-brand-cream/60">{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -81,43 +107,68 @@ export default function Manufacturing() {
         </div>
       </section>
 
-      {/* Standards */}
-      <section className="container-max container-px py-16">
+      {/* Operational Standards */}
+      <section className="container-max container-px py-20">
         <Reveal>
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <p className="section-eyebrow mb-3">Our Standards</p>
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="section-eyebrow mb-3 block">Quality Assurance</span>
             <h2 className="text-3xl lg:text-4xl font-serif font-bold text-brand-brown text-balance">
-              Quality you can trust
+              Standards built into every batch
             </h2>
           </div>
         </Reveal>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            'FSSAI licensed facility',
-            '100% vegetarian production',
-            'Jain-friendly ingredients',
-            'Sealed, hygienic packaging',
-            'Consistent batch quality',
-            'Natural spices, no shortcuts',
-            'Careful ingredient sourcing',
-            'Quality checks at every stage',
+            'FSSAI licensed food facility',
+            '100% vegetarian production line',
+            'Dedicated dietary variant options',
+            'Moisture-barrier sealed packaging',
+            'Rigorous batch consistency checks',
+            'Natural spice blends without shortcuts',
+            'Careful lentil flour sourcing',
+            'Traceable quality control steps',
           ].map((point, i) => (
             <Reveal key={i} delay={i * 40}>
-              <div className="flex items-start gap-3 p-4 card">
+              <div className="card p-6 bg-white border border-brand-brown/5 shadow-soft flex items-start gap-3 h-full">
                 <Check className="w-5 h-5 text-brand-red shrink-0 mt-0.5" />
-                <span className="text-sm text-brand-brown/70">{point}</span>
+                <span className="text-sm font-medium text-brand-brown/80">{point}</span>
               </div>
             </Reveal>
           ))}
         </div>
       </section>
 
+      {/* B2B Commercial Call to Action */}
+      <section className="bg-brand-cream-dark py-16 border-t border-brand-brown/5">
+        <div className="container-max container-px text-center">
+          <Reveal>
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-2xl lg:text-3xl font-serif font-bold text-brand-brown mb-4">
+                Ready to partner with Kawad Swad?
+              </h2>
+              <p className="text-base text-brand-brown/70 mb-8">
+                Whether you are looking for bulk supply for your business or regional distribution partnerships, our team is ready to assist you.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link to="/bulk-orders" className="btn-primary px-8 py-3">
+                  Request Bulk Supply <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+                <Link to="/distributor" className="btn-outline px-8 py-3">
+                  Become a Distributor
+                </Link>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       <CTABanner
-        title="Want to see it for yourself?"
-        description="We welcome business partners who want to understand our process. Get in touch to learn more."
+        title="Questions about our manufacturing?"
+        description="Get in touch with our commercial and operations team for direct assistance."
         primaryLabel="Contact Us"
         primaryLink="/contact"
-        secondaryLabel="View Products"
+        secondaryLabel="Explore Products"
         secondaryLink="/products"
       />
     </>
