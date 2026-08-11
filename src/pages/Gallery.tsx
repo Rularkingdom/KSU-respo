@@ -4,49 +4,49 @@ import { Reveal } from '@/components/Reveal';
 
 const galleryItems = [
   { 
-    label: 'PRODUCT SHOWCASE — Real product photography and packaging will be placed here', 
+    label: 'PRODUCTS — Real product photography will be placed here', 
     aspect: 'aspect-[16/9]', 
     span: 'col-span-2 lg:col-span-2 row-span-2',
     category: 'Brand & Products'
   },
   { 
-    label: 'INGREDIENTS — Lentil and spice sourcing', 
+    label: 'INGREDIENTS — Real ingredient photography will be placed here', 
     aspect: 'aspect-[4/3]', 
     span: 'col-span-1 lg:col-span-1',
     category: 'Making & Craft'
   },
   { 
-    label: 'MANUFACTURING — Facility production floor', 
+    label: 'MANUFACTURING — Real manufacturing photography will be placed here', 
     aspect: 'aspect-[4/3]', 
     span: 'col-span-1 lg:col-span-1',
     category: 'Making & Craft'
   },
   { 
-    label: 'DOUGH MIXING — Traditional preparation methods', 
+    label: 'PROCESS — Real process photography will be placed here', 
     aspect: 'aspect-square', 
     span: 'col-span-1 lg:col-span-1',
     category: 'Making & Craft'
   },
   { 
-    label: 'DRYING STAGE — Standard seasoning area', 
+    label: 'PROCESS — Real process photography will be placed here', 
     aspect: 'aspect-[16/9]', 
     span: 'col-span-2 lg:col-span-2',
     category: 'Making & Craft'
   },
   { 
-    label: 'QUALITY INSPECTION — Batch review process', 
+    label: 'QUALITY — Real quality/process photography will be placed here', 
     aspect: 'aspect-square', 
     span: 'col-span-1 lg:col-span-1',
     category: 'Quality'
   },
   { 
-    label: 'SEALED PACKAGING — Food-grade pouches', 
+    label: 'PACKAGING — Real packaging photography will be placed here', 
     aspect: 'aspect-[4/3]', 
     span: 'col-span-2 lg:col-span-2',
     category: 'Packaging'
   },
   { 
-    label: 'NIMAR REGION — Landscape and cultural roots', 
+    label: 'NIMAR — Real Nimar/brand photography will be placed here', 
     aspect: 'aspect-[16/9]', 
     span: 'col-span-2 lg:col-span-2',
     category: 'Food Culture'
